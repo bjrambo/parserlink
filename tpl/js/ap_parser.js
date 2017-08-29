@@ -59,7 +59,7 @@
 	var prefix = 'user_content_';
 
 	// Set ID Attribute
-	$('.' + container).css('text-align', ap_parser_printing_align).each(function (i) {
+	$('.' + container).css('text-align', ap_parser_print_align).each(function (i) {
 		var apo = $(this);
 		apo.find('.' + load).attr('id', prefix + load + i);
 		apo.find('.' + cnt).attr('id', prefix + cnt + i);

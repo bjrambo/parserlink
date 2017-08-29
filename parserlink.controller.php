@@ -48,7 +48,7 @@ class parserlinkController extends parserlink
 		$object_target = in_array($config->object_target, array('document', 'comment', 'all')) ? $config->object_target : 'document';
 		$exception = preg_replace('/\r\n|\r|\n|\t|\s/', '', $config->exception);
 
-		$printing_align = in_array($config->print_align, array('center', 'left', 'right')) ? $config->printing_align : 'center';
+		$print_align = in_array($config->print_align, array('center', 'left', 'right')) ? $config->print_align : 'center';
 		$loading_image = $config->loading_image ? (int)$config->loading_image : 0;
 		$title_length = (int)preg_replace('/[^0-9]*/s', '', $config->title_length);
 		$print_domain = $config->print_domain ? (int)$config->print_domain : 0;
@@ -69,7 +69,7 @@ class parserlinkController extends parserlink
 		Context::addHtmlHeader("<script>
 			var ap_parser_target = '{$object_target}';
 			var ap_parser_exception = '{$exception}';
-			var ap_parser_printing_align = '{$printing_align}';
+			var ap_parser_print_align = '{$print_align}';
 			var ap_parser_loading_image = {$loading_image};
 			var ap_parser_title_length = {$title_length};
 			var ap_parser_print_domain = {$print_domain};
