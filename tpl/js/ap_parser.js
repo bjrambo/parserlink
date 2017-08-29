@@ -114,10 +114,22 @@
 		if (!isValidURL(urls[i])) {
 			return false;
 		} else {
-			if (!ap_parser_facebook_embed && urls[i].indexOf('facebook.com') != -1) getFacebook(i);
-			else if (!ap_parser_twitter_embed && urls[i].indexOf('twitter.com') != -1) getTwitter(i);
-			else if (!ap_parser_instagram_embed && (urls[i].indexOf('instagram.com') != -1 || urls[i].indexOf('instagr.am') != -1)) getInstagram(i);
-			else if (!ap_parser_youtube_embed && (urls[i].indexOf('youtube.com/') != -1 || urls[i].indexOf('youtu.be/') != -1)) getYoutube(i);
+			if (!ap_parser_facebook_embed && urls[i].indexOf('facebook.com') != -1)
+			{
+				getFacebook(i);
+			}
+			else if (!ap_parser_twitter_embed && urls[i].indexOf('twitter.com') != -1)
+			{
+				getTwitter(i);
+			}
+			else if (!ap_parser_instagram_embed && (urls[i].indexOf('instagram.com') != -1 || urls[i].indexOf('instagr.am') != -1))
+			{
+				getInstagram(i);
+			}
+			else if (!ap_parser_youtube_embed && (urls[i].indexOf('youtube.com/') != -1 || urls[i].indexOf('youtu.be/') != -1))
+			{
+				getYoutube(i);
+			}
 			else getPreview(i);
 		}
 	}
@@ -255,9 +267,9 @@
 			var regExp = /http(?:s)?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_]+)/;
 			var matches = urls[i].match(regExp);
 			if (matches && $.inArray(matches[1], ['', 'about', 'developer', 'legal', 'explore']) == -1) {
-				$.exec_json('parserlink.getInstagram', {'username': url_match[2]}, function (data) {
+				$.exec_json('parserlink.getInstagram', {'username': url_match[2]}, function (obj) {
 					var src = '';
-					$.each(data.data, function (index, value) {
+					$.each(obj.data, function (index, value) {
 						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/' + value.code + '">'
 						src += '<img class="ap_parser_insta_thumb" src="' + value.thumbnail_src + '" style="width: 24%; margin: 0 .5%;" />';
 						src += '</a>';
@@ -305,12 +317,17 @@
 
 	function getPreview(i) {
 		$.ajax({
-			url: './addons/ap_parser/ap_parser.php',
-			data: {url: urls[i], img_len: ap_parser_image_length},
+			type: 'POST',
+			url: request_uri,
+			data: {
+				module : 'parserlink',
+				act : 'getDefaultPreviewByUrl',
+				url: urls[i],
+				img_len: ap_parser_image_length
+			},
 			dataType: 'json',
-			method: 'POST',
 			success: function (data) {
-				if (data == null || data.title == null || data.title == '') $('#' + prefix + cnt + i).parent('.' + container).remove();
+				if (data.obj == null || data.obj.title == null || data.obj.title == '') $('#' + prefix + cnt + i).parent('.' + container).remove();
 				else {
 					// Hide .wsfr and Show Loading Image
 					$('.wfsr').hide();
@@ -323,20 +340,20 @@
 					}
 
 					// Set Content of Title
-					$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.title + '" />');
-					var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.title;
+					$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.obj.title + '" />');
+					var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.obj.title;
 					$('#' + prefix + tit + i + ' a').attr('href', urls[i]).html(parsed_title);
 					$('input[name=' + tit + i + ']').remove();
 
 					// Set Content of URL, Current Image Information, and the Number of Total Images
 					var domain = urls[i].split('//')[1].split('/')[0];
 					ap_parser_print_domain ? $('#' + prefix + uri + i).remove() : $('#' + prefix + uri + i + ' a').attr('href', urls[i]).html(domain);
-					var total_images = parseInt(data.total_images);
+					var total_images = parseInt(data.obj.total_images);
 
 					// Set Content of Description
-					if (data.description) {
-						$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.description + '" />');
-						var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.description;
+					if (data.obj.description) {
+						$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.obj.description + '" />');
+						var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.obj.description;
 						$('#' + prefix + desc + i).html(parsed_content);
 						$('input[name=' + desc + i + ']').remove();
 					} else $('#' + prefix + desc + i).remove();
@@ -351,12 +368,12 @@
 						if (total_images == 1) {
 							$('#' + prefix + nav + i).remove();
 							var img_src = '';
-							img_src = (data.images[0].img.indexOf('http') != -1) ? data.images[0].base64 : '//' + domain + data.images[0].base64;
+							img_src = (data.obj.images[0].img.indexOf('http') != -1) ? data.obj.images[0].base64 : '//' + domain + data.obj.images[0].base64;
 							$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_1">');
 						} else if (total_images > 1) {
 							$('#' + prefix + tot + i).html(total_images);
 							$('#' + prefix + imgs + i).html('');
-							$.each(data.images, function (a, b) {
+							$.each(data.obj.images, function (a, b) {
 								var img_src = '';
 								img_src = (b.img.indexOf('http') != -1) ? b.base64 : '//' + domain + b.base64;
 								$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_' + (a + 1) + '">');
