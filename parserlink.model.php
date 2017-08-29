@@ -461,7 +461,10 @@ class parserlinkModel extends parserlink
 			$return_array['images'] = array_values($images);
 		}
 		$return_array['total_images'] = count($return_array['images']);
-
+		if(empty($return_array))
+		{
+			$this->add('tobool', false);
+		}
 		$this->add('obj', $return_array);
 	}
 
