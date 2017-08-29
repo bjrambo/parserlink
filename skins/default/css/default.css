@@ -1,0 +1,77 @@
+.ap_parser_content {
+	display: inline-block;
+	margin: 10px auto !important;
+	width: 99%;
+	max-width: 500px;
+	border: 1px solid #ccc;
+}
+	.ap_parser_image_wrap {
+		display: table-cell;
+		padding: 20px 0 20px 20px !important;
+		vertical-align: top;
+	}
+		.ap_parser_images {
+			min-width: 120px;
+			max-width: 160px;
+			max-height: 160px;
+			overflow: hidden;
+			text-align: center;
+		}
+			.ap_parser_image_wrap img {
+				max-width: 100% !important;
+				height: auto;
+				vertical-align: middle;
+			}
+		.ap_parser_total_image_nav {
+			margin-top: 10px !important;
+			text-align: center;
+		}
+			.ap_parser_total_images_info {
+				display: inline-block;
+				margin-left: 10px !important;
+				font-size: 12px;
+				vertical-align: middle;
+			}
+	.ap_parser_info {
+		display: table-cell;
+		width: 100%;
+		padding: 20px !important;
+		vertical-align: top;
+		line-height: 1.5;
+		word-break: break-all;
+	}
+		.ap_parser_info a {
+				color: #333 !important;
+		}
+			.ap_parser_title {
+				font-size: 15px;
+				font-weight: bold;
+				text-align: left;
+			}
+			.ap_parser_url {
+				margin-top: 10px !important;
+				font-size: 12px;
+				text-align: right;
+			}
+				.ap_parser_url a {
+					color: #999 !important;
+				}
+			.ap_parser_desc {
+				margin-top: 10px !important;
+				font-size: 12px;
+				text-align: justify;
+			}
+
+@media screen and (max-width: 480px) {
+	.ap_parser_image_wrap {
+		display:block;
+		padding:20px 20px 0 20px !important;
+	}
+		.ap_parser_images {
+			margin:0 auto !important;
+		}
+	.ap_parser_info {
+		display: block;
+		width: auto;
+	}
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skin version="0.2">
+	<title xml:lang="ko">parserlink 기본 스킨</title>
+	<version>0.1</version>
+	<date>2017-08-29</date>
+	<author email_address="qw5414@naver.com" link="http://www.bjrambo.com/">
+		<name xml:lang="ko">BJ람보</name>
+	</author>
+	<license>GPL v2</license>
+	<extra_vars>
+	</extra_vars>
+</skin>

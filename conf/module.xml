@@ -2,5 +2,11 @@
 <module>
 	<grants />
 	<permissions />
-	<actions />
+	<actions>
+		<!-- Admin view -->
+		<action name="dispParserlinkAdminConfig" type="view" admin_index="true" />
+
+		<!-- Admin Controller -->
+		<action name="procParserlinkAdminInsertConfig" type="controller" />
+	</actions>
 </module>

@@ -1,0 +1,181 @@
+<include target="header.html" />
+
+<form action="./" method="post" class="x_form-horizontal" id="fo_parserlink">
+	<input type="hidden" name="module" value="parserlink" />
+	<input type="hidden" name="act" value="procParserlinkAdminInsertConfig" />
+
+	<section class="section">
+		<h1>기본설정</h1>
+		<div class="x_control-group">
+			<label class="x_control-label" for="object_target">링크추출범위</label>
+			<div class="x_controls">
+				<select name="object_target" id="object_target">
+					<option value="document" selected="selected"|cond="$config->object_target == 'document'">본문에서만</option>
+					<option value="comment" selected="selected"|cond="$config->object_target == 'comment'">댓글에서만</option>
+					<option value="all" selected="selected"|cond="$config->object_target == 'all'">본문 + 댓글</option>
+				</select>
+				<p class="x_help-block">파싱할 링크를 어느 대상에서 추출할 것인지 결정합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label for="skin" class="x_control-label">{$lang->skin}</label>
+			<div class="x_controls">
+				<select name="skin" id="skin">
+					<option value="0" selected="selected"|cond="!$config->skin">미사용</option>
+					<option loop="$skin_list=>$key,$val" value="{$key}" selected="selected"|cond="$config->skin == $key">{$val->title}</option>
+				</select>
+				<p class="x_help-block">{$lang->about_skin}</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="exception">파싱 예외 도메인</label>
+			<div class="x_controls">
+				<textarea name="exception" id="exception" class="lang_code" rows="8" cols="42">{htmlspecialchars($config->exception)}</textarea>
+				<p id="header_text_help">파싱을 하지 않아도 되는 사이트의 도메인을 입력하세요. 엔터로 복수도메인을 구분합니다.</p>
+			</div>
+		</div>
+	</section>
+	<section class="section">
+		<h1>출력 옵션</h1>
+		<div class="x_control-group">
+			<label class="x_control-label" for="print_align">출력 위치</label>
+			<div class="x_controls">
+				<select name="print_align" id="print_align">
+					<option value="center" selected="selected"|cond="$config->print_align == 'center'">중앙 정렬(기본)</option>
+					<option value="left" selected="selected"|cond="$config->print_align == 'left'">왼쪽 정렬</option>
+					<option value="right" selected="selected"|cond="$config->print_align == 'right'">오른쪽 정렬</option>
+				</select>
+				<p class="x_help-block">파싱할 링크를 어느 대상에서 추출할 것인지 결정합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="loading_image">로딩 이미지 출력</label>
+			<div class="x_controls">
+				<select name="loading_image" id="loading_image">
+					<option value="Y" selected="selected"|cond="$config->loading_image == 'Y'">출력함 (기본)</option>
+					<option value="N" selected="selected"|cond="$config->loading_image == 'N'">출력하지 않음</option>
+				</select>
+				<p class="x_help-block">파싱할 링크를 어느 대상에서 추출할 것인지 결정합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="title_length">제목길이</label>
+			<div class="x_controls">
+				<input type="number" id="title_length" name="title_length" value="{$config->title_length}" />
+				<label>출력할 링크 페이지의 제목 길이를 지정된 숫자만큼 제한합니다. (입력하지 않으면 사이트에서 제공하는 제목 전체를 출력합니다.)</label>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="print_domain">도메인 출력</label>
+			<div class="x_controls">
+				<select name="print_domain" id="print_domain">
+					<option value="Y" selected="selected"|cond="$config->print_domain == 'Y'">출력함 (기본)</option>
+					<option value="N" selected="selected"|cond="$config->print_domain == 'N'">출력하지 않음</option>
+				</select>
+				<p class="x_help-block">출력할 링크 페이지의 도메인 주소를 노출할지 결정합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="content_length">내용길이</label>
+			<div class="x_controls">
+				<input type="number" id="content_length" name="content_length" value="{$config->content_length}" />
+				<label>출력할 링크 페이지의 내용 길이를 지정된 숫자만큼 제한합니다.</label>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="image_length">이미지 갯수</label>
+			<div class="x_controls">
+				<input type="number" id="image_length" name="image_length" value="{$config->image_length}" />
+				<label>출력할 링크 페이지의 이미지 갯수를 지정된 숫자만큼 제한합니다.</label>
+			</div>
+		</div>
+	</section>
+	<section class="section">
+		<h1>링크옵션</h1>
+		<div class="x_control-group">
+			<label class="x_control-label" for="internal_link">자기 사이트 링크</label>
+			<div class="x_controls">
+				<select name="internal_link" id="internal_link">
+					<option value="_self" selected="selected"|cond="$config->internal_link == '_self'">현재 창으로 (기본)</option>
+					<option value="_blank" selected="selected"|cond="$config->internal_link == '_blank'">새 창으로</option>
+				</select>
+				<p class="x_help-block">내부 링크를 클릭했을 때 연결 방식을 선택합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="external_link">외부 사이트 링크</label>
+			<div class="x_controls">
+				<select name="external_link" id="external_link">
+					<option value="_blank" selected="selected"|cond="$config->external_link == '_blank'">새 창으로 (기본)</option>
+					<option value="_self" selected="selected"|cond="$config->external_link == '_self'">현재 창으로</option>
+				</select>
+				<p class="x_help-block">외부 링크를 클릭했을 때 연결 방식을 선택합니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="link_text">링크 텍스트</label>
+			<div class="x_controls">
+				<select name="link_text" id="link_text">
+					<option value="store" selected="selected"|cond="$config->link_text == 'store'">보관 (기본)</option>
+					<option value="delete" selected="selected"|cond="$config->link_text == 'delete'">삭제</option>
+				</select>
+				<p class="x_help-block">카드 출력 후 링크 텍스트를 어떻게 처리할 지 결정합니다.</p>
+			</div>
+		</div>
+	</section>
+	<section class="section">
+		<h1>임베드 옵션</h1>
+		<div class="x_control-group">
+			<label class="x_control-label" for="facebook_embed">페이스북 임베드</label>
+			<div class="x_controls">
+				<select name="facebook_embed" id="facebook_embed">
+					<option value="embed" selected="selected"|cond="$config->facebook_embed == 'embed'">임베드 (기본)</option>
+					<option value="default" selected="selected"|cond="$config->facebook_embed == 'default'">일반 출력</option>
+				</select>
+				<p class="x_help-block">페이스북 포스트와 페이지의 경우 페이스북 스타일로 임베드 할 수 있습니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="twitter_embed">트위터 임베드</label>
+			<div class="x_controls">
+				<select name="twitter_embed" id="twitter_embed">
+					<option value="embed" selected="selected"|cond="$config->twitter_embed == 'embed'">임베드 (기본)</option>
+					<option value="default" selected="selected"|cond="$config->twitter_embed == 'default'">일반 출력</option>
+				</select>
+				<p class="x_help-block">트위터 트윗과 타임라인의 경우 트위터 스타일로 임베드 할 수 있습니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="instagram_embed">인스타그램 임베드</label>
+			<div class="x_controls">
+				<select name="instagram_embed" id="instagram_embed">
+					<option value="embed" selected="selected"|cond="$config->instagram_embed == 'embed'">임베드 (기본)</option>
+					<option value="default" selected="selected"|cond="$config->instagram_embed == 'default'">일반 출력</option>
+				</select>
+				<p class="x_help-block">인스타그램 포스트와 프로필의 경우 인스타그램 스타일로 임베드 할 수 있습니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="youtube_embed">유튜브 임베드</label>
+			<div class="x_controls">
+				<select name="youtube_embed" id="youtube_embed">
+					<option value="embed" selected="selected"|cond="$config->youtube_embed == 'embed'">임베드 (기본)</option>
+					<option value="default" selected="selected"|cond="$config->youtube_embed == 'default'">일반 출력</option>
+				</select>
+				<p class="x_help-block">유튜브 포스트와 페이지의 경우 유튜브 스타일로 임베드 할 수 있습니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
+			<label class="x_control-label" for="youtube_width">유튜브 영상 최대 넓이</label>
+			<div class="x_controls">
+				<input type="text" id="youtube_width" name="youtube_width" value="{$config->youtube_width}" />
+				<label>사이트 내로 임베드할 때 최대 넓이를 지정해주세요. (px, %와 같은 단위도 함께 입력해야합니다. 기본값은 500px)</label>
+			</div>
+		</div>
+	</section>
+	<div class="x_clearfix btnArea">
+		<div class="x_pull-right">
+			<button class="x_btn x_btn-primary" type="submit">{$lang->cmd_registration}</button>
+		</div>
+	</div>
+</form>
