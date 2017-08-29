@@ -7,5 +7,5 @@ When naming a function, it is explicitly set. But, If it is display functions, s
 e.g) 
 * dispParserlinkAdminConfigDisplay // O.K
 * procParserlinkAdminInsertConfig // O.K
-* procParserlinkAdminConfig // Worng
+* procParserlinkAdminConfig // WRONG
 * dispParserlinkAdminConfig // O.K : Simply name for the page break.
