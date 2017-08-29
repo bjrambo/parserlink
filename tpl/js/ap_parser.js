@@ -255,9 +255,9 @@
 			var regExp = /http(?:s)?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_]+)/;
 			var matches = urls[i].match(regExp);
 			if (matches && $.inArray(matches[1], ['', 'about', 'developer', 'legal', 'explore']) == -1) {
-				$.post('./addons/ap_parser/ap_parser.php', {user_id: url_match[2]}, function (data) {
+				$.exec_json('parserlink.getInstagram', {'username': url_match[2]}, function (data) {
 					var src = '';
-					$.each(data, function (index, value) {
+					$.each(data.data, function (index, value) {
 						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/' + value.code + '">'
 						src += '<img class="ap_parser_insta_thumb" src="' + value.thumbnail_src + '" style="width: 24%; margin: 0 .5%;" />';
 						src += '</a>';

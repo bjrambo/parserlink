@@ -8,5 +8,7 @@
 
 		<!-- Admin Controller -->
 		<action name="procParserlinkAdminInsertConfig" type="controller" />
+		<action name="getInstagram" type="Model" />
+
 	</actions>
 </module>
