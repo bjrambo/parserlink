@@ -3,6 +3,12 @@ class parserlink extends ModuleObject
 {
 	private static $config_cache = NULL;
 
+	private static $triggers = array(
+		array('moduleHandler.init', 'parserlink', 'controller', 'triggerBeforeModuleHandlerInit', 'before'),
+		array('moduleHandler.init', 'parserlink', 'controller', 'triggerAfterModuleHandlerInit', 'after'),
+		array('display', 'parserlink', 'controller', 'triggerAfterDisplay', 'after'),
+	);
+
 	protected function getConfig()
 	{
 		if(self::$config_cache !== NULL)
