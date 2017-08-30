@@ -73,7 +73,9 @@
 		apo.find('.' + tit).attr('id', prefix + tit + i);
 		apo.find('.' + uri).attr('id', prefix + uri + i);
 		apo.find('.' + desc).attr('id', prefix + desc + i);
-		if (ap_parser_loading_image) $('#' + prefix + load + i).hide();
+		if (ap_parser_loading_image == 'N') {
+			$('#' + prefix + load + i).hide();
+		}
 		// Load the Containers in Viewport ( http://jsfiddle.net/wilsonjonash/c7nS5/27/ )
 		var _alreadyVisible = false;
 		$(window).on('load scroll resize', function () {

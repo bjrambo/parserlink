@@ -49,7 +49,7 @@ class parserlinkController extends parserlink
 		$exception = preg_replace('/\r\n|\r|\n|\t|\s/', '', $config->exception);
 
 		$print_align = in_array($config->print_align, array('center', 'left', 'right')) ? $config->print_align : 'center';
-		$loading_image = $config->loading_image ? (int)$config->loading_image : 0;
+		$loading_image = $config->loading_image ? $config->loading_image : 'Y';
 		$title_length = (int)preg_replace('/[^0-9]*/s', '', $config->title_length);
 		$print_domain = $config->print_domain ? (int)$config->print_domain : 0;
 		$content_length = (int)preg_replace('/[^0-9]*/s', '', $config->content_length);
@@ -70,7 +70,7 @@ class parserlinkController extends parserlink
 			var ap_parser_target = '{$object_target}';
 			var ap_parser_exception = '{$exception}';
 			var ap_parser_print_align = '{$print_align}';
-			var ap_parser_loading_image = {$loading_image};
+			var ap_parser_loading_image = '{$loading_image}';
 			var ap_parser_title_length = {$title_length};
 			var ap_parser_print_domain = {$print_domain};
 			var ap_parser_content_length = {$content_length};
