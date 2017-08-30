@@ -182,6 +182,23 @@
 			</div>
 		</div>
 	</section>
+
+	<section class="section">
+		<h1>모듈설정 제한</h1>
+		<div class="x_control-group">
+			<label class="x_control-label">모듈별 파싱 설정</label>
+			<div class="x_controls">
+				<p class="x_help-block">선택한 모듈에서는 게시글을 파싱하지 않습니다.</p>
+				<div loop="$mid_list => $mid, $item">
+					<label>
+						<input type="checkbox" value="{$item->module_srl}" name="use_mid_list[]" checked="checked"|cond="is_array($config->use_mid_list) && in_array($item->module_srl, $config->use_mid_list)" />
+						<strong>{$item->browser_title}</strong> ({$item->mid} / {strtoupper($item->module)})
+					</label>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<div class="x_clearfix btnArea">
 		<div class="x_pull-right">
 			<button class="x_btn x_btn-primary" type="submit">{$lang->cmd_registration}</button>

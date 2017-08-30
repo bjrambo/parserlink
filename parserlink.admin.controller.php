@@ -36,6 +36,7 @@ class parserlinkAdminController extends parserlink
 			'instagram_embed',
 			'youtube_embed',
 			'youtube_width',
+			'use_mid_list',
 		);
 
 		foreach ($config_vars as $val)

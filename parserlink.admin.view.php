@@ -11,10 +11,14 @@ class parserlinkAdminView extends parserlink
 	{
 		$config = self::getConfig();
 
+		/* @var $oModuleModel moduleModel */
 		$oModuleModel = getModel('module');
 		$skin_list = $oModuleModel->getSkins($this->module_path);
 
-		Context::set('skin_list',$skin_list);
+		$mid_list = $oModuleModel->getMidList();
+
+		Context::set('mid_list', $mid_list);
+		Context::set('skin_list', $skin_list);
 		Context::set('config', $config);
 	}
 }

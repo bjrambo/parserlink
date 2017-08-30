@@ -10,6 +10,5 @@
 		<action name="procParserlinkAdminInsertConfig" type="controller" />
 		<action name="getInstagram" type="model" />
 		<action name="dispDefaultPreviewByUrl" type="view" />
-		<action name="getDefaultPreviewByUrl" type="model" />
 	</actions>
 </module>

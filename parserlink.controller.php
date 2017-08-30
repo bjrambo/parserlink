@@ -1,25 +1,6 @@
 <?php
 class parserlinkController extends parserlink
 {
-	function triggerBeforeModuleHandlerInit()
-	{
-		$config = self::getConfig();
-
-		if($config->use !== 'Y')
-		{
-			return new Object();
-		}
-
-		$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
-		if(!is_dir($template_path)||!$config->skin)
-		{
-			$config->skin = 'default';
-			$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
-		}
-
-		Context::addCSSFile($template_path . '/css/default.css');
-	}
-
 	function triggerAfterModuleHandlerInit()
 	{
 		$config = self::getConfig();
@@ -29,11 +10,19 @@ class parserlinkController extends parserlink
 		}
 
 		$document_srl = Context::get('document_srl');
+		if (!$document_srl)
+		{
+			return new Object();
+		}
 
 		/* @var $oDocumentModel documentModel */
 		$oDocumentModel = getModel('document');
 
-		if (!$document_srl)
+		/** @var  $oModuleModel moduleModel */
+		$oModuleModel = getModel('module');
+		$module_info = $oModuleModel->getModuleInfoByDocumentSrl($document_srl);
+
+		if(in_array($module_info->module_srl, $config->use_mid_list))
 		{
 			return new Object();
 		}
@@ -97,6 +86,7 @@ class parserlinkController extends parserlink
 		</script>");
 
 		Context::loadFile(array('./modules/parserlink/tpl/js/ap_parser.js', 'body', '', null));
+		Context::addCSSFile($template_path . '/css/default.css');
 	}
 
 	function triggerAfterDisplay()

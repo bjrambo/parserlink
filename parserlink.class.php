@@ -4,8 +4,12 @@ class parserlink extends ModuleObject
 	private static $config_cache = NULL;
 
 	private static $triggers = array(
-		array('moduleHandler.init', 'parserlink', 'controller', 'triggerBeforeModuleHandlerInit', 'before'),
 		array('moduleHandler.init', 'parserlink', 'controller', 'triggerAfterModuleHandlerInit', 'after'),
+	);
+
+	private static $delete_triggers = array(
+		array('moduleHandler.init', 'parserlink', 'controller', 'triggerBeforeModuleHandlerInit', 'before'),
+		array('display', 'parserlink', 'controller', 'triggerAfterDisplay', 'after'),
 	);
 
 	protected function getConfig()
@@ -63,18 +67,32 @@ class parserlink extends ModuleObject
 			if(!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
 		}
 
+		foreach (self::$delete_triggers as $trigger)
+		{
+			if($oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4])) return true;
+		}
+
 		return false;
 	}
 
 	function moduleUpdate()
 	{
 		$oModuleModel = getModel('module');
+		/** @var  $oModuleController moduleController */
 		$oModuleController = getController('module');
 		foreach(self::$triggers as $trigger)
 		{
 			if(!$oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]))
 			{
 				$oModuleController->insertTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]);
+			}
+		}
+
+		foreach(self::$delete_triggers as $trigger)
+		{
+			if($oModuleModel->getTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]))
+			{
+				$oModuleController->deleteTrigger($trigger[0], $trigger[1], $trigger[2], $trigger[3], $trigger[4]);
 			}
 		}
 
