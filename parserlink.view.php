@@ -1,5 +1,5 @@
 <?php
-class parserlinkModel extends parserlink
+class parserlinkView extends parserlink
 {
 	function dispDefaultPreviewByUrl()
 	{
@@ -12,7 +12,6 @@ class parserlinkModel extends parserlink
 
 		$oParserlinkModel = getModel('parserlink');
 
-		debugPrint('1');
 		$url = $oParserlinkModel->checkValues($url);
 		$base_url = substr($url, 0, strpos($url, "/", 8));
 		$relative_url = substr($url, 0, strrpos($url, "/") + 1);
