@@ -58,7 +58,7 @@ class parserlinkController extends parserlink
 
 		$internal_link = in_array($config->internal_link, array('_self', '_blank')) ? $config->internal_link : '_self';
 		$external_link = in_array($config->external_link, array('_blank', '_self')) ? $config->external_link : '_blank';
-		$link_text = $config->link_text ? (int)$config->link_text : 0;
+		$link_text = $config->link_text ? $config->link_text : 'store';
 
 		$facebook_embed = $config->facebook_embed ? (int)$config->facebook_embed : 0;
 		$twitter_embed = $config->twitter_embed ? (int)$config->twitter_embed : 0;
@@ -77,7 +77,7 @@ class parserlinkController extends parserlink
 			var ap_parser_image_length = {$image_length};
 			var ap_parser_internal_link = '{$internal_link}';
 			var ap_parser_external_link = '{$external_link}';
-			var ap_parser_link_text = {$link_text};
+			var ap_parser_link_text = '{$link_text}';
 			var ap_parser_facebook_embed = {$facebook_embed};
 			var ap_parser_twitter_embed = {$twitter_embed};
 			var ap_parser_instagram_embed = {$instagram_embed};

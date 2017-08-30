@@ -154,7 +154,7 @@
 					// Flip Viewable Content
 					fb_cnt.css({'width': 'auto', 'border': 'none'}).html(data.html).fadeIn('slow');
 					fb_load.hide();
-					if (ap_parser_link_text) {
+					if (ap_parser_link_text == 'delete') {
 						var p = fb_cnt.parent('.' + container).prev('p');
 						if (p.text().indexOf(urls[i]) != -1) {
 							if (p.text() == urls[i]) p.remove();
@@ -177,7 +177,7 @@
 				fb_page += ' width=500 height=130" style="width:500px;border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>';
 				fb_cnt.html(fb_page).css({'border': 'none'}).fadeIn('slow');
 				fb_load.hide();
-				if (ap_parser_link_text) {
+				if (ap_parser_link_text == 'delete') {
 					var p = fb_cnt.parent('.' + container).prev('p');
 					if (p.text().indexOf(urls[i]) != -1) {
 						if (p.text() == urls[i]) p.remove();
@@ -205,7 +205,7 @@
 					success: function (data) {
 						tw_cnt.css({'border': 'none'}).html(data.html).fadeIn('slow');
 						tw_load.hide();
-						if (ap_parser_link_text) {
+						if (ap_parser_link_text == 'delete') {
 							var p = tw_cnt.parent('.' + container).prev('p');
 							if (p.text().indexOf(urls[i]) != -1) {
 								if (p.text() == urls[i]) p.remove();
@@ -223,7 +223,7 @@
 				tw_post += '<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>';
 				tw_cnt.html(tw_post).css({'max-width': 500, 'border-radius': 4, 'overflow-y': 'auto'}).fadeIn('slow');
 				tw_load.hide();
-				if (ap_parser_link_text) {
+				if (ap_parser_link_text == 'delete') {
 					var p = tw_cnt.parent('.' + container).prev('p');
 					if (p.text().indexOf(urls[i]) != -1) {
 						if (p.text() == urls[i]) p.remove();
@@ -251,7 +251,7 @@
 				success: function (data) {
 					ig_cnt.css({'border': 'none'}).html(data.html).fadeIn('slow');
 					ig_load.hide();
-					if (ap_parser_link_text) {
+					if (ap_parser_link_text == 'delete') {
 						var p = ig_cnt.parent('.' + container).prev('p');
 						if (p.text().indexOf(urls[i]) != -1) {
 							if (p.text() == urls[i]) p.remove();
@@ -307,7 +307,7 @@
 			});
 			yt_cnt.css({'max-width': ap_parser_youtube_max, 'border': 'none'}).fadeIn('slow');
 			yt_load.hide();
-			if (ap_parser_link_text) {
+			if (ap_parser_link_text == 'delete') {
 				var p = yt_cnt.parent('.' + container).prev('p');
 				if (p.text().indexOf(urls[i]) != -1) {
 					if (p.text() == urls[i]) p.remove();
@@ -337,7 +337,7 @@
 				{
 					// Hide .wsfr and Show Loading Image
 					$('.wfsr').hide();
-					if (ap_parser_link_text) {
+					if (ap_parser_link_text == 'delete') {
 						var p = $('#' + prefix + cnt + i).parent('.' + container).prev('p');
 						if (p.text().indexOf(urls[i]) != -1) {
 							if (p.text() == urls[i]) p.remove();
