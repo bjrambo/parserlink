@@ -12,8 +12,8 @@
 	var url_regex = new RegExp('(' + protocol_re + '(' + domain_re + '|' + ip_re + '|localhost' + ')' + port_re + user_re + path_re + hash_re + ')', 'ig');
 
 	// Select a Dom in Which You Would Take Links
-	if (ap_parser_target == 'doc') x = $('.xe_content[class^=document_]');
-	else if (ap_parser_target == 'cmt') x = $('.xe_content[class^=comment_]');
+	if (ap_parser_target == 'document') x = $('.xe_content[class^=document_]');
+	else if (ap_parser_target == 'comment') x = $('.xe_content[class^=comment_]');
 	else x = $('.xe_content');
 
 	// Extract Paragraphs with Regulr Expression
