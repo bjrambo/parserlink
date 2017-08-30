@@ -60,10 +60,10 @@ class parserlinkController extends parserlink
 		$external_link = in_array($config->external_link, array('_blank', '_self')) ? $config->external_link : '_blank';
 		$link_text = $config->link_text ? $config->link_text : 'store';
 
-		$facebook_embed = $config->facebook_embed ? (int)$config->facebook_embed : 0;
-		$twitter_embed = $config->twitter_embed ? (int)$config->twitter_embed : 0;
-		$instagram_embed = $config->instagram_embed ? (int)$config->instagram_embed : 0;
-		$youtube_embed = $config->youtube_embed ? (int)$config->youtube_embed : 0;
+		$facebook_embed = $config->facebook_embed ? $config->facebook_embed : 'embed';
+		$twitter_embed = $config->twitter_embed ? $config->twitter_embed : 'embed';
+		$instagram_embed = $config->instagram_embed ? $config->instagram_embed : 'embed';
+		$youtube_embed = $config->youtube_embed ? $config->youtube_embed : 'embed';
 		$youtube_width = $config->youtube_width ? $config->youtube_width : '500px';
 
 		Context::addHtmlHeader("<script>
@@ -78,10 +78,10 @@ class parserlinkController extends parserlink
 			var ap_parser_internal_link = '{$internal_link}';
 			var ap_parser_external_link = '{$external_link}';
 			var ap_parser_link_text = '{$link_text}';
-			var ap_parser_facebook_embed = {$facebook_embed};
-			var ap_parser_twitter_embed = {$twitter_embed};
-			var ap_parser_instagram_embed = {$instagram_embed};
-			var ap_parser_youtube_embed = {$youtube_embed};
+			var ap_parser_facebook_embed = '{$facebook_embed}';
+			var ap_parser_twitter_embed = '{$twitter_embed}';
+			var ap_parser_instagram_embed = '{$instagram_embed}';
+			var ap_parser_youtube_embed = '{$youtube_embed}';
 			var ap_parser_youtube_max = '{$youtube_width}';
 			var ap_parser_output = '{$template_output}';
 		</script>");

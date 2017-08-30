@@ -116,19 +116,19 @@
 		if (!isValidURL(urls[i])) {
 			return false;
 		} else {
-			if (!ap_parser_facebook_embed && urls[i].indexOf('facebook.com') != -1)
+			if (ap_parser_facebook_embed != 'default' && urls[i].indexOf('facebook.com') != -1)
 			{
 				getFacebook(i);
 			}
-			else if (!ap_parser_twitter_embed && urls[i].indexOf('twitter.com') != -1)
+			else if (ap_parser_twitter_embed != 'default' && urls[i].indexOf('twitter.com') != -1)
 			{
 				getTwitter(i);
 			}
-			else if (!ap_parser_instagram_embed && (urls[i].indexOf('instagram.com') != -1 || urls[i].indexOf('instagr.am') != -1))
+			else if (ap_parser_instagram_embed != 'default' && (urls[i].indexOf('instagram.com') != -1 || urls[i].indexOf('instagr.am') != -1))
 			{
 				getInstagram(i);
 			}
-			else if (!ap_parser_youtube_embed && (urls[i].indexOf('youtube.com/') != -1 || urls[i].indexOf('youtu.be/') != -1))
+			else if (ap_parser_youtube_embed != 'default' && (urls[i].indexOf('youtube.com/') != -1 || urls[i].indexOf('youtu.be/') != -1))
 			{
 				getYoutube(i);
 			}
