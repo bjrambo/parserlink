@@ -1,4 +1,5 @@
 <?php
+
 class parserlinkView extends parserlink
 {
 	function dispDefaultPreviewByUrl()
@@ -32,43 +33,19 @@ class parserlinkView extends parserlink
 		}
 		if (strpos($url, '//news.naver.com') !== false && strpos($url, '//m.news.naver.com') === false)
 		{
-			$url = str_replace(array(
-				'//news.naver.com',
-				'/main'
-			), array(
-				'//m.news.naver.com',
-				''
-			), $url);
+			$url = str_replace(array('//news.naver.com', '/main'), array('//m.news.naver.com', ''), $url);
 		}
 		if (strpos($url, '//movie.naver.com/movie/preview/preview.nhn?preview') !== false)
 		{
-			$url = str_replace(array(
-				'://',
-				'movie/preview/preview.nhn?preview_'
-			), array(
-				'://m.',
-				'm/event/EventView.nhn?'
-			), $url);
+			$url = str_replace(array('://', 'movie/preview/preview.nhn?preview_'), array('://m.', 'm/event/EventView.nhn?'), $url);
 		}
 		if (strpos($url, '//movie.naver.com/movie/preview/apply_win.nhn?apply') !== false)
 		{
-			$url = str_replace(array(
-				'://',
-				'movie/preview/apply_win.nhn?apply_'
-			), array(
-				'://m.',
-				'm/event/WinnerView.nhn?'
-			), $url);
+			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array('://m.', 'm/event/WinnerView.nhn?'), $url);
 		}
 		if (strpos($url, '//movie.naver.com/movie/board/ticketshare/list.nhn') !== false)
 		{
-			$url = str_replace(array(
-				'://',
-				'movie/preview/apply_win.nhn?apply_'
-			), array(
-				'://m.',
-				'm/event/ticketshare/TicketShareList.nhn'
-			), $url);
+			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array('://m.', 'm/event/ticketshare/TicketShareList.nhn'), $url);
 		}
 		if (strpos($url, '//media.daum.net') !== false)
 		{
@@ -76,10 +53,7 @@ class parserlinkView extends parserlink
 		}
 		if (strpos($url, '//finance.naver.com') !== false || strpos($url, '//info.finance.naver.com') !== false)
 		{
-			$url = str_replace(array(
-				'//info.finance.naver.com',
-				'//finance.naver.com'
-			), '//m.stock.naver.com', $url);
+			$url = str_replace(array('//info.finance.naver.com', '//finance.naver.com'), '//m.stock.naver.com', $url);
 			$_url = explode('/', str_replace('//', '/', $url));
 			if ($_url[2] == 'sise')
 			{
@@ -107,19 +81,7 @@ class parserlinkView extends parserlink
 				}
 				else if (strpos($_url[3], 'market_news_view.nhn') !== false)
 				{
-					$url = str_replace(array(
-						'world',
-						'market_news_view',
-						'=main',
-						'office_id=',
-						'article_id='
-					), array(
-						'news',
-						'read',
-						'=mainnews',
-						'officeId=',
-						'articleId='
-					), $url);
+					$url = str_replace(array('world', 'market_news_view', '=main', 'office_id=', 'article_id='), array('news', 'read', '=mainnews', 'officeId=', 'articleId='), $url);
 				}
 			}
 			else if ($_url[2] == 'marketindex')
@@ -133,13 +95,7 @@ class parserlinkView extends parserlink
 			{
 				if (strpos($_url[3], 'pro_invest_') !== false)
 				{
-					$url = str_replace(array(
-						'pro_invest_main.nhn',
-						'pro_invest_read.nhn'
-					), array(
-						'expert.nhn',
-						'expertColumnRead.nhn'
-					), $url);
+					$url = str_replace(array('pro_invest_main.nhn', 'pro_invest_read.nhn'), array('expert.nhn', 'expertColumnRead.nhn'), $url);
 				}
 				else
 				{
@@ -159,17 +115,7 @@ class parserlinkView extends parserlink
 			{
 				if ($_url[3] && $_url[3] != '')
 				{
-					$url = str_replace(array(
-						'news_read',
-						'mode=',
-						'office_id=',
-						'article_id='
-					), array(
-						'read',
-						'category=',
-						'officeId=',
-						'articleId='
-					), $url);
+					$url = str_replace(array('news_read', 'mode=', 'office_id=', 'article_id='), array('read', 'category=', 'officeId=', 'articleId='), $url);
 				}
 			}
 		}
@@ -199,14 +145,7 @@ class parserlinkView extends parserlink
 			$string = '';
 			$string = $oParserlinkModel->getReturn($url);
 		}
-		$string = str_replace(array(
-			'\n',
-			'\r',
-			'\t',
-			'&nbsp;',
-			'</span>',
-			'</div>'
-		), '', $string);
+		$string = str_replace(array('\n', '\r', '\t', '&nbsp;', '</span>', '</div>'), '', $string);
 		$string = preg_replace('/(<(div|span)\s[^>]+\s?>)/', '', $string);
 		$string = preg_replace('/<!--(.*?)-->/is', '', $string);
 		if (mb_detect_encoding($string, "UTF-8") != "UTF-8")
@@ -274,10 +213,7 @@ class parserlinkView extends parserlink
 			$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
 			if (strtolower($node['attributes']['property']) == 'naverblog:profile_image')
 			{
-				$images[] = array(
-					"img" => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img))
-				);
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -285,10 +221,7 @@ class parserlinkView extends parserlink
 			}
 			else if (strtolower($node['attributes']['property']) == 'og:image')
 			{
-				$images[] = array(
-					"img" => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img))
-				);
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -296,10 +229,7 @@ class parserlinkView extends parserlink
 			}
 			else if (strtolower($node['attributes']['name']) == 'twitter:image:src')
 			{
-				$images[] = array(
-					"img" => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img))
-				);
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -352,10 +282,7 @@ class parserlinkView extends parserlink
 					}
 				}
 				$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
-				$images[] = array(
-					"img" => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img))
-				);
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
 			}
 			// Other Images
 			else
@@ -398,10 +325,7 @@ class parserlinkView extends parserlink
 						{
 							if (($width > 0 && $height > 0 && (($width / $height) < 3) && (($width / $height) > .2)) && strpos($img, 'logo') === false)
 							{
-								$images[] = array(
-									"img" => $img,
-									'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img))
-								);
+								$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
 							}
 						}
 
