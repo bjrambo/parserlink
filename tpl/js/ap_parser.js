@@ -316,111 +316,126 @@
 	}
 
 	function getPreview(i) {
-		$.exec_json('parserlink.getDefaultPreviewByUrl', {'url': urls[i], 'img_len': ap_parser_image_length}, function (data) {
-			if (data.obj == null || data.obj.title == null || data.obj.title == '' || data.tobool == false)
-			{
+		$.ajax({
+			type:'POST',
+			url: request_uri,
+			data:{
+				module: 'parserlink',
+				act: 'dispDefaultPreviewByUrl',
+				url: urls[i],
+				img_len: ap_parser_image_length
+			},
+			dataType: 'json',
+			success: function (data) {
+				if (data.obj == null || data.obj.title == null || data.obj.title == '' || data.tobool == false)
+				{
+					$('#' + prefix + cnt + i).parent('.' + container).remove();
+				}
+				else
+				{
+					// Hide .wsfr and Show Loading Image
+					$('.wfsr').hide();
+					if (ap_parser_link_text) {
+						var p = $('#' + prefix + cnt + i).parent('.' + container).prev('p');
+						if (p.text().indexOf(urls[i]) != -1) {
+							if (p.text() == urls[i]) p.remove();
+							else p.html(p.text().replace(urls[i], ''));
+						}
+					}
+
+					// Set Content of Title
+					$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.obj.title + '" />');
+					var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.obj.title;
+					$('#' + prefix + tit + i + ' a').attr('href', urls[i]).html(parsed_title);
+					$('input[name=' + tit + i + ']').remove();
+
+					// Set Content of URL, Current Image Information, and the Number of Total Images
+					var domain = urls[i].split('//')[1].split('/')[0];
+					ap_parser_print_domain ? $('#' + prefix + uri + i).remove() : $('#' + prefix + uri + i + ' a').attr('href', urls[i]).html(domain);
+					var total_images = parseInt(data.obj.total_images);
+
+					// Set Content of Description
+					if (data.obj.description) {
+						$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.obj.description + '" />');
+						var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.obj.description;
+						$('#' + prefix + desc + i).html(parsed_content);
+						$('input[name=' + desc + i + ']').remove();
+					} else $('#' + prefix + desc + i).remove();
+
+					// Set Image Container
+					if (total_images == 0) {
+						$('#' + prefix + wrp + i).remove();
+					} else if (total_images > 0) {
+						// Set Element Names for Using Script
+						var img_id = 'ap_parser_img';
+						$('#' + prefix + imgs + i).parent('a').attr('href', urls[i]);
+						if (total_images == 1) {
+							$('#' + prefix + nav + i).remove();
+							var img_src = '';
+							img_src = (data.obj.images[0].img.indexOf('http') != -1) ? data.obj.images[0].base64 : '//' + domain + data.obj.images[0].base64;
+							$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_1">');
+						} else if (total_images > 1) {
+							$('#' + prefix + tot + i).html(total_images);
+							$('#' + prefix + imgs + i).html('');
+							$.each(data.obj.images, function (a, b) {
+								var img_src = '';
+								img_src = (b.img.indexOf('http') != -1) ? b.base64 : '//' + domain + b.base64;
+								$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_' + (a + 1) + '">');
+							});
+							$('#' + prefix + imgs + i + ' img').hide();
+						}
+						$('#' + prefix + imgs + i + ' img').on('error', function () {
+							$('#' + prefix + wrp + i).remove();
+						});
+					}
+
+					// Flip Viewable Content
+					$('#' + prefix + cnt + i).fadeIn('slow');
+					$('#' + prefix + load + i).hide();
+
+					// Show first image
+					if (total_images > 0) {
+						$('img#' + prefix + img_id + i + '_1').fadeIn();
+						if (total_images > 1) {
+							$('#' + prefix + num + i).html(1);
+
+							// next image
+							$('#' + prefix + 'next' + i).on('click', function () {
+								var index = $('#' + prefix + num + i).html();
+								$('img#' + prefix + img_id + i + '_' + index).hide();
+								if (index < total_images) {
+									new_index = parseInt(index) + parseInt(1);
+								} else {
+									new_index = 1;
+								}
+								$('#' + prefix + num + i).html(new_index);
+								$('img#' + prefix + img_id + i + '_' + new_index).show();
+								return false;
+							});
+
+							// prev image
+							$('#' + prefix + 'prev' + i).on('click', function () {
+								var index = $('#' + prefix + num + i).html();
+								$('img#' + prefix + img_id + i + '_' + index).hide();
+								if (index > 1) {
+									new_index = parseInt(index) - parseInt(1);
+									;
+								} else {
+									new_index = total_images;
+								}
+								$('#' + prefix + num + i).html(new_index);
+								$('img#' + prefix + img_id + i + '_' + new_index).show();
+								return false;
+							});
+						}
+					}
+				}
+			},
+			error: function () {
 				$('#' + prefix + cnt + i).parent('.' + container).remove();
 			}
-			else
-			{
-				// Hide .wsfr and Show Loading Image
-				$('.wfsr').hide();
-				if (ap_parser_link_text) {
-					var p = $('#' + prefix + cnt + i).parent('.' + container).prev('p');
-					if (p.text().indexOf(urls[i]) != -1) {
-						if (p.text() == urls[i]) p.remove();
-						else p.html(p.text().replace(urls[i], ''));
-					}
-				}
-
-				// Set Content of Title
-				$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.obj.title + '" />');
-				var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.obj.title;
-				$('#' + prefix + tit + i + ' a').attr('href', urls[i]).html(parsed_title);
-				$('input[name=' + tit + i + ']').remove();
-
-				// Set Content of URL, Current Image Information, and the Number of Total Images
-				var domain = urls[i].split('//')[1].split('/')[0];
-				ap_parser_print_domain ? $('#' + prefix + uri + i).remove() : $('#' + prefix + uri + i + ' a').attr('href', urls[i]).html(domain);
-				var total_images = parseInt(data.obj.total_images);
-
-				// Set Content of Description
-				if (data.obj.description) {
-					$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.obj.description + '" />');
-					var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.obj.description;
-					$('#' + prefix + desc + i).html(parsed_content);
-					$('input[name=' + desc + i + ']').remove();
-				} else $('#' + prefix + desc + i).remove();
-
-				// Set Image Container
-				if (total_images == 0) {
-					$('#' + prefix + wrp + i).remove();
-				} else if (total_images > 0) {
-					// Set Element Names for Using Script
-					var img_id = 'ap_parser_img';
-					$('#' + prefix + imgs + i).parent('a').attr('href', urls[i]);
-					if (total_images == 1) {
-						$('#' + prefix + nav + i).remove();
-						var img_src = '';
-						img_src = (data.obj.images[0].img.indexOf('http') != -1) ? data.obj.images[0].base64 : '//' + domain + data.obj.images[0].base64;
-						$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_1">');
-					} else if (total_images > 1) {
-						$('#' + prefix + tot + i).html(total_images);
-						$('#' + prefix + imgs + i).html('');
-						$.each(data.obj.images, function (a, b) {
-							var img_src = '';
-							img_src = (b.img.indexOf('http') != -1) ? b.base64 : '//' + domain + b.base64;
-							$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_' + (a + 1) + '">');
-						});
-						$('#' + prefix + imgs + i + ' img').hide();
-					}
-					$('#' + prefix + imgs + i + ' img').on('error', function () {
-						$('#' + prefix + wrp + i).remove();
-					});
-				}
-
-				// Flip Viewable Content
-				$('#' + prefix + cnt + i).fadeIn('slow');
-				$('#' + prefix + load + i).hide();
-
-				// Show first image
-				if (total_images > 0) {
-					$('img#' + prefix + img_id + i + '_1').fadeIn();
-					if (total_images > 1) {
-						$('#' + prefix + num + i).html(1);
-
-						// next image
-						$('#' + prefix + 'next' + i).on('click', function () {
-							var index = $('#' + prefix + num + i).html();
-							$('img#' + prefix + img_id + i + '_' + index).hide();
-							if (index < total_images) {
-								new_index = parseInt(index) + parseInt(1);
-							} else {
-								new_index = 1;
-							}
-							$('#' + prefix + num + i).html(new_index);
-							$('img#' + prefix + img_id + i + '_' + new_index).show();
-							return false;
-						});
-
-						// prev image
-						$('#' + prefix + 'prev' + i).on('click', function () {
-							var index = $('#' + prefix + num + i).html();
-							$('img#' + prefix + img_id + i + '_' + index).hide();
-							if (index > 1) {
-								new_index = parseInt(index) - parseInt(1);
-								;
-							} else {
-								new_index = total_images;
-							}
-							$('#' + prefix + num + i).html(new_index);
-							$('img#' + prefix + img_id + i + '_' + new_index).show();
-							return false;
-						});
-					}
-				}
-			}
 		});
+
 	}
 
 	$('.' + cnt + ' a').on('click', function () {
