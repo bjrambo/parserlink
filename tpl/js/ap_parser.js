@@ -327,7 +327,7 @@
 			},
 			dataType: 'json',
 			success: function (data) {
-				if (data.obj == null || data.obj.title == null || data.obj.title == '' || data.tobool == false)
+				if (data == null || data.title == null || data.title == '' || data.tobool == false)
 				{
 					$('#' + prefix + cnt + i).parent('.' + container).remove();
 				}
@@ -344,20 +344,20 @@
 					}
 
 					// Set Content of Title
-					$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.obj.title + '" />');
-					var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.obj.title;
+					$('#' + prefix + load + i).append('<input type="hidden" name="' + tit + i + '" value="' + data.title + '" />');
+					var parsed_title = ap_parser_title_length ? $('input[name=' + tit + i + ']').val().substr(0, ap_parser_title_length) : data.title;
 					$('#' + prefix + tit + i + ' a').attr('href', urls[i]).html(parsed_title);
 					$('input[name=' + tit + i + ']').remove();
 
 					// Set Content of URL, Current Image Information, and the Number of Total Images
 					var domain = urls[i].split('//')[1].split('/')[0];
 					ap_parser_print_domain ? $('#' + prefix + uri + i).remove() : $('#' + prefix + uri + i + ' a').attr('href', urls[i]).html(domain);
-					var total_images = parseInt(data.obj.total_images);
+					var total_images = parseInt(data.total_images);
 
 					// Set Content of Description
-					if (data.obj.description) {
-						$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.obj.description + '" />');
-						var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.obj.description;
+					if (data.description) {
+						$('#' + prefix + load + i).append('<input type="hidden" name="' + desc + i + '" value="' + data.description + '" />');
+						var parsed_content = ap_parser_content_length ? $('input[name=' + desc + i + ']').val().substr(0, ap_parser_content_length) : data.description;
 						$('#' + prefix + desc + i).html(parsed_content);
 						$('input[name=' + desc + i + ']').remove();
 					} else $('#' + prefix + desc + i).remove();
@@ -372,12 +372,12 @@
 						if (total_images == 1) {
 							$('#' + prefix + nav + i).remove();
 							var img_src = '';
-							img_src = (data.obj.images[0].img.indexOf('http') != -1) ? data.obj.images[0].base64 : '//' + domain + data.obj.images[0].base64;
+							img_src = (data.images[0].img.indexOf('http') != -1) ? data.images[0].base64 : '//' + domain + data.images[0].base64;
 							$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_1">');
 						} else if (total_images > 1) {
 							$('#' + prefix + tot + i).html(total_images);
 							$('#' + prefix + imgs + i).html('');
-							$.each(data.obj.images, function (a, b) {
+							$.each(data.images, function (a, b) {
 								var img_src = '';
 								img_src = (b.img.indexOf('http') != -1) ? b.base64 : '//' + domain + b.base64;
 								$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_' + (a + 1) + '">');

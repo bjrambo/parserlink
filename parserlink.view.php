@@ -1,5 +1,5 @@
 <?php
-class parserlinkModel extends parserlink
+class parserlinkView extends parserlink
 {
 	function dispDefaultPreviewByUrl()
 	{
@@ -12,8 +12,8 @@ class parserlinkModel extends parserlink
 
 		$oParserlinkModel = getModel('parserlink');
 
-		debugPrint('1');
 		$url = $oParserlinkModel->checkValues($url);
+
 		$base_url = substr($url, 0, strpos($url, "/", 8));
 		$relative_url = substr($url, 0, strrpos($url, "/") + 1);
 
@@ -173,7 +173,6 @@ class parserlinkModel extends parserlink
 				}
 			}
 		}
-
 		// Get Data
 		$string = $oParserlinkModel->getReturn($url);
 		// Daum Blog & Cafe Url Re-arrange
@@ -416,9 +415,7 @@ class parserlinkModel extends parserlink
 			$return_array['images'] = array_values($images);
 		}
 		$return_array['total_images'] = count($return_array['images']);
-
 		$return_array = json_encode($return_array);
-
 		echo $return_array;
 		exit();
 	}
