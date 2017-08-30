@@ -4,6 +4,13 @@ class parserlinkView extends parserlink
 {
 	function dispDefaultPreviewByUrl()
 	{
+		$config = $this->getConfig();
+
+		if($config->use !== 'Y')
+		{
+			return;
+		}
+
 		$url = urldecode(Context::get('url'));
 		$img_len = Context::get('img_len');
 

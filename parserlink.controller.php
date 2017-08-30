@@ -5,6 +5,11 @@ class parserlinkController extends parserlink
 	{
 		$config = self::getConfig();
 
+		if($config->use !== 'Y')
+		{
+			return new Object();
+		}
+
 		$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
 		if(!is_dir($template_path)||!$config->skin)
 		{
@@ -17,6 +22,12 @@ class parserlinkController extends parserlink
 
 	function triggerAfterModuleHandlerInit()
 	{
+		$config = self::getConfig();
+		if($config->use !== 'Y')
+		{
+			return new Object();
+		}
+
 		$document_srl = Context::get('document_srl');
 
 		/* @var $oDocumentModel documentModel */
@@ -34,7 +45,6 @@ class parserlinkController extends parserlink
 			return new Object();
 		}
 
-		$config = self::getConfig();
 		$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
 		if(!is_dir($template_path)||!$config->skin)
 		{

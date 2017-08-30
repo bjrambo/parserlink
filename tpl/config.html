@@ -6,6 +6,15 @@
 
 	<section class="section">
 		<h1>기본설정</h1>
+
+		<div class="x_control-group">
+			<label class="x_control-label">사용옵션</label>
+			<div class="x_controls">
+				<label class="x_inline"><input type="radio" name="use" value="Y" checked="checked"|cond="$config->use == 'Y'" /> {$lang->use}</label>
+				<label class="x_inline"><input type="radio" name="use" value="N" checked="checked"|cond="$config->use != 'Y'" /> {$lang->notuse}</label>
+				<p class="x_help-block">이 옵션을 사용하지 않으면 이 모듈은 비활성화가 됩니다.</p>
+			</div>
+		</div>
 		<div class="x_control-group">
 			<label class="x_control-label" for="object_target">링크추출범위</label>
 			<div class="x_controls">

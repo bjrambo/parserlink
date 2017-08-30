@@ -18,6 +18,7 @@ class parserlinkAdminController extends parserlink
 
 		$obj = Context::getRequestVars();
 		$config_vars = array(
+			'use',
 			'object_target',
 			'skin',
 			'exception',

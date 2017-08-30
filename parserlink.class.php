@@ -6,7 +6,6 @@ class parserlink extends ModuleObject
 	private static $triggers = array(
 		array('moduleHandler.init', 'parserlink', 'controller', 'triggerBeforeModuleHandlerInit', 'before'),
 		array('moduleHandler.init', 'parserlink', 'controller', 'triggerAfterModuleHandlerInit', 'after'),
-		array('display', 'parserlink', 'controller', 'triggerAfterDisplay', 'after'),
 	);
 
 	protected function getConfig()
@@ -23,6 +22,11 @@ class parserlink extends ModuleObject
 		if(!$config)
 		{
 			$config = new stdClass();
+		}
+
+		if(!$config->use)
+		{
+			$config->use = 'N';
 		}
 
 		self::$config_cache = $config;
