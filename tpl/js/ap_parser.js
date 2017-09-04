@@ -219,7 +219,7 @@
 				});
 			} else {
 				// Twitter Timeline
-				var tw_post = '<a class="twitter-timeline" data-dnt="true" data-tweet-limit="1" href="' + urls[i] + '">Tweets by ' + url_match[2] + '</a>';
+				var tw_post = '<a class="twitter-timeline" data-dnt="true" data-tweet-limit="1" href="' + urls[i] + '" target="'+ap_parser_external_link+'">Tweets by ' + url_match[2] + '</a>';
 				tw_post += '<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>';
 				tw_cnt.html(tw_post).css({'max-width': 500, 'border-radius': 4, 'overflow-y': 'auto'}).fadeIn('slow');
 				tw_load.hide();
