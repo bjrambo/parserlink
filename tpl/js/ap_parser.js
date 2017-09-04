@@ -239,6 +239,7 @@
 	}
 
 	function getInstagram(i) {
+		window.show_waiting_message = false;
 		var url_match = urls[i].replace('//', '/').split('/');
 		if (url_match[2] == 'p') {
 			// Instagram Post
@@ -266,7 +267,6 @@
 		} else if (url_match[2] == 'explore' && url_match[3] == 'tags') {
 			// Instagram Tags
 			getPreview(i);
-
 			$.exec_json('parserlink.getInstagramTagList', {'tag': url_match[4]}, function (obj) {
 				var src = '';
 				$.each(obj.data, function(index, value) {
@@ -458,6 +458,7 @@
 						}
 					}
 				}
+				window.show_waiting_message = true;
 			},
 			error: function () {
 				$('#' + prefix + cnt + i).parent('.' + container).remove();
