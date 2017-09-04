@@ -9,7 +9,7 @@ class parserlinkModel extends parserlink
 	 * Get instagram by username.
 	 * @return bool
 	 */
-	function getInstagram()
+	function getInstagramProfileList()
 	{
 		$username = Context::get('username');
 		if(!$username)
@@ -22,6 +22,25 @@ class parserlinkModel extends parserlink
 
 		$data = json_decode($response, true);
 		$media = $data['user']['media']['nodes'];
+		$this->add('data', $media);
+	}
+
+	function getInstagramTagList()
+	{
+		$tag = Context::get('tag');
+		if(!$tag)
+		{
+			return false;
+		}
+
+		$tag = urldecode($tag);
+		$tag = urlencode($tag);
+
+		$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+		$response = FileHandler::getRemoteResource($url);
+
+		$data = json_decode($response, true);
+		$media = $data['tag']['media']['nodes'];
 		$this->add('data', $media);
 	}
 

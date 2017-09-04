@@ -263,16 +263,42 @@
 					getPreview(i);
 				}
 			});
+		} else if (url_match[2] == 'explore' && url_match[3] == 'tags') {
+			// Instagram Tags
+			getPreview(i);
+
+			$.exec_json('parserlink.getInstagramTagList', {'tag': url_match[4]}, function (obj) {
+				var src = '';
+				$.each(obj.data, function(index, value) {
+					if (index === 0) {
+						$('#'+prefix+cnt+i).find('.ap_parser_info').before('<div class="ap_parser_image_wrap">'+
+							'<a href="https://www.instagram.com/p/'+value.code+'" target="'+ap_parser_external_link+'">'+
+							'<div class="ap_parser_images">'+
+							'<img src="'+value.thumbnail_src+'">'+
+							'</div></a></div>');
+					} else {
+						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/'+value.code+'" target="'+ap_parser_external_link+'">'
+						src += '<img class="ap_parser_insta_thumb" src="'+value.thumbnail_src+'" style="width: 24%; margin: 0 .5%;" />';
+						src += '</a>';
+						if (index == 16) {
+							return false;
+						}
+					}
+				});
+				$('#'+prefix+cnt+i+' .ap_parser_image_wrap, #'+prefix+cnt+i+' .ap_parser_info').wrapAll('<div />');
+				$('#'+prefix+cnt+i).append('<div class="ap_parser_insta" style="padding: 10px 20px 20px" />').css('border-radius', 4);
+				$('#'+prefix+cnt+i).children('.ap_parser_insta').html(src);
+			});
 		} else {
 			// Instagram Profile
 			getPreview(i);
 			var regExp = /http(?:s)?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_]+)/;
 			var matches = urls[i].match(regExp);
 			if (matches && $.inArray(matches[1], ['', 'about', 'developer', 'legal', 'explore']) == -1) {
-				$.exec_json('parserlink.getInstagram', {'username': url_match[2]}, function (obj) {
+				$.exec_json('parserlink.getInstagramProfileList', {'username': url_match[2]}, function (obj) {
 					var src = '';
 					$.each(obj.data, function (index, value) {
-						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/' + value.code + '">'
+						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/' + value.code + '" target="'+ap_parser_external_link+'">'
 						src += '<img class="ap_parser_insta_thumb" src="' + value.thumbnail_src + '" style="width: 24%; margin: 0 .5%;" />';
 						src += '</a>';
 					});
