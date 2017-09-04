@@ -239,6 +239,7 @@
 	}
 
 	function getInstagram(i) {
+		// helped by @kijin
 		window.show_waiting_message = false;
 		var url_match = urls[i].replace('//', '/').split('/');
 		if (url_match[2] == 'p') {
