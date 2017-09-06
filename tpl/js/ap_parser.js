@@ -352,7 +352,8 @@
 				module: 'parserlink',
 				act: 'dispDefaultPreviewByUrl',
 				url: urls[i],
-				img_len: ap_parser_image_length
+				img_len: ap_parser_image_length,
+				parser_document_srl: ap_parser_document_srl
 			},
 			dataType: 'json',
 			success: function (data) {

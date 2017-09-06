@@ -22,7 +22,7 @@ class parserlinkController extends parserlink
 		$oModuleModel = getModel('module');
 		$module_info = $oModuleModel->getModuleInfoByDocumentSrl($document_srl);
 
-		if(in_array($module_info->module_srl, $config->use_mid_list))
+		if(is_array($config->use_mid_list) && in_array($module_info->module_srl, $config->use_mid_list))
 		{
 			return new Object();
 		}
@@ -83,6 +83,7 @@ class parserlinkController extends parserlink
 			var ap_parser_youtube_embed = '{$youtube_embed}';
 			var ap_parser_youtube_max = '{$youtube_width}';
 			var ap_parser_output = '{$template_output}';
+			var ap_parser_document_srl = '{$document_srl}'
 		</script>");
 
 		Context::loadFile(array('./modules/parserlink/tpl/js/ap_parser.js', 'body', '', null));

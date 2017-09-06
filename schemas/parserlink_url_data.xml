@@ -1,0 +1,9 @@
+<table name="parserlink_url_data">
+	<column name="module_srl" type="number" size="11" notnull="notnull" />
+	<column name="document_srl" type="number" size="11" notnull="notnull" />
+	<column name="site_url" type="varchar" size="255" index="idx_site_url" notnull="notnull" />
+	<column name="site_data" type="bigtext" notnull="notnull" />
+	<column name="update_time" type="bignumber" notnull="notnull" />
+	<column name="sns_type" type="varchar" size="20" index="idx_sns_type" />
+	<column name="embed_type" type="varchar" size="20" index="idx_embed_type" />
+</table>

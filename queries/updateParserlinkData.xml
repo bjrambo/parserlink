@@ -1,0 +1,13 @@
+<query id="updateParserlinkData" action="update">
+	<tables>
+		<table name="parserlink_url_data" />
+	</tables>
+	<columns>
+		<column name="site_data" var="site_data" notnull="notnull" />
+		<column name="update_time" var="update_time" notnull="notnull" />
+		<column name="embed_type" var="embed_type" />
+	</columns>
+	<conditions>
+		<condition operation="equal" column="site_url" var="site_url" notnull="notnull" />
+	</conditions>
+</query>

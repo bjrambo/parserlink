@@ -5,8 +5,7 @@ class parserlinkView extends parserlink
 	function dispDefaultPreviewByUrl()
 	{
 		$config = $this->getConfig();
-
-		if($config->use !== 'Y')
+		if ($config->use !== 'Y')
 		{
 			return;
 		}
@@ -14,9 +13,11 @@ class parserlinkView extends parserlink
 		$url = urldecode(Context::get('url'));
 		$img_len = Context::get('img_len');
 
+		$document_srl = Context::get('parser_document_srl');
+		$module_info = getModel('module')->getModuleInfoByDocumentSrl($document_srl);
+
 		$return_array = array();
 		$images = array();
-
 
 		$oParserlinkModel = getModel('parserlink');
 
@@ -126,6 +127,47 @@ class parserlinkView extends parserlink
 				}
 			}
 		}
+
+		if (preg_match('/youtube.com/u', $url))
+		{
+			$sns_type = 'youtube';
+		}
+		else if (preg_match('/twitter.com/u', $url))
+		{
+			$sns_type = 'twitter';
+		}
+		else if (preg_match('/instagram.com/u', $url))
+		{
+			$sns_type = 'instagram';
+		}
+		else if (preg_match('/facebook.com/u', $url))
+		{
+			$sns_type = 'facebook';
+		}
+		else
+		{
+			$sns_type = 'default';
+		}
+		$configSnsEmbedName = $sns_type . '_embed';
+
+		$search_args = new stdClass();
+		$search_args->site_url = $url;
+		$search_output = executeQuery('parserlink.getParserlinkData', $search_args);
+		$search_data = $search_output->data;
+		if ($search_data)
+		{
+			if ($search_data->embed_type == $config->{$configSnsEmbedName})
+			{
+				echo unserialize($search_data->site_data);
+				exit();
+			}
+			else if ($sns_type === 'default')
+			{
+				echo unserialize($search_data->site_data);
+				exit();
+			}
+		}
+
 		// Get Data
 		$string = $oParserlinkModel->getReturn($url);
 		// Daum Blog & Cafe Url Re-arrange
@@ -159,7 +201,6 @@ class parserlinkView extends parserlink
 		{
 			$string = utf8_encode($string);
 		}
-
 
 		// Parse Title
 		$return_array['title'] = '';
@@ -347,6 +388,31 @@ class parserlinkView extends parserlink
 		}
 		$return_array['total_images'] = count($return_array['images']);
 		$return_array = json_encode($return_array);
+		$args = new stdClass();
+		$args->site_url = $url;
+		$args->module_srl = $module_info->module_srl;
+		$args->document_srl = $document_srl;
+		$args->site_data = serialize($return_array);
+		$args->update_time = time();
+		$args->sns_type = $sns_type;
+		$args->embed_type = $config->{$configSnsEmbedName};
+		if ($search_data)
+		{
+			$updateOutout = executeQuery('parserlink.updateParserlinkData', $args);
+			if (!$updateOutout->toBool())
+			{
+				return $updateOutout;
+			}
+		}
+		else
+		{
+			$insertOutput = executeQuery('parserlink.insertParserlinkData', $args);
+			if (!$insertOutput->toBool())
+			{
+				return $insertOutput;
+			}
+		}
+
 		echo $return_array;
 		exit();
 	}

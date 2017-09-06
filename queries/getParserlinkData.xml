@@ -1,0 +1,11 @@
+<query id="getParserlinkData" action="select">
+	<tables>
+		<table name="parserlink_url_data" />
+	</tables>
+	<columns>
+		<column name="*" />
+	</columns>
+	<conditions>
+		<condition operation="equal" column="site_url" var="site_url" notnull="notnull" />
+	</conditions>
+</query>

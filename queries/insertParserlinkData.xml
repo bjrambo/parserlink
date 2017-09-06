@@ -1,0 +1,14 @@
+<query id="insertParserlinkData" action="insert">
+	<tables>
+		<table name="parserlink_url_data" />
+	</tables>
+	<columns>
+		<column name="module_srl" var="module_srl" filter="number" notnull="notnull" />
+		<column name="document_srl" var="document_srl" notnull="notnull" />
+		<column name="site_url" var="site_url" notnull="notnull" />
+		<column name="site_data" var="site_data" notnull="notnull" />
+		<column name="update_time" var="update_time" notnull="notnull" />
+		<column name="sns_type" var="sns_type" notnull="notnull" />
+		<column name="embed_type" var="embed_type" />
+	</columns>
+</query>
