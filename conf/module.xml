@@ -5,9 +5,13 @@
 	<actions>
 		<!-- Admin view -->
 		<action name="dispParserlinkAdminConfig" type="view" admin_index="true" />
+		<action name="dispParserlinkAdminDataList" type="view" />
 
 		<!-- Admin Controller -->
 		<action name="procParserlinkAdminInsertConfig" type="controller" />
+		<action name="procParserlinkAdminDeleteAllData" type="controller" />
+
+		<!-- ETC -->
 		<action name="getInstagramProfileList" type="model" />
 		<action name="getInstagramTagList" type="model" />
 		<action name="dispDefaultPreviewByUrl" type="view" />

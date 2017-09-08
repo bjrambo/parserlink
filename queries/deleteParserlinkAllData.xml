@@ -1,0 +1,5 @@
+<query id="deleteParserlinkAllData" action="delete">
+	<tables>
+		<table name="parserlink_url_data" />
+	</tables>
+</query>
