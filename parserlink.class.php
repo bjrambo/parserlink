@@ -12,6 +12,8 @@ class parserlink extends ModuleObject
 		array('display', 'parserlink', 'controller', 'triggerAfterDisplay', 'after'),
 	);
 
+	protected static $oCacheHandler = false;
+
 	protected function getConfig()
 	{
 		if(self::$config_cache !== NULL)
@@ -97,6 +99,27 @@ class parserlink extends ModuleObject
 		}
 
 		return new Object();
+	}
+
+	function getCacheHandler()
+	{
+		if(self::$oCacheHandler === false)
+		{
+			if(self::getConfig()->use_cache !== 'yes')
+			{
+				self::$oCacheHandler = false;
+			}
+			else
+			{
+				self::$oCacheHandler = CacheHandler::getInstance('object');
+				if(!self::$oCacheHandler->isSupport())
+				{
+					self::$oCacheHandler = false;
+				}
+			}
+		}
+
+		return false;
 	}
 }
 /* End of file */

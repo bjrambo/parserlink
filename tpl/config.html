@@ -15,6 +15,18 @@
 				<p class="x_help-block">이 옵션을 사용하지 않으면 이 모듈은 비활성화가 됩니다.</p>
 			</div>
 		</div>
+
+		<div class="x_control-group">
+			<label class="x_control-label">오브젝트 캐시사용</label>
+			<div class="x_controls">
+				<select name="attendance_use_cache" disabled="disabled"|cond="!$object_cache_available">
+					<option value="yes" selected="selected"|cond="$config->use_cache=='yes' && $object_cache_available">{$lang->use}</option>
+					<option value="no" selected="selected"|cond="$config->use_cache=='no' || !$object_cache_available">{$lang->notuse}</option>
+				</select>
+				<p>{$lang->attendance_use_cache_help}</p>
+			</div>
+		</div>
+
 		<div class="x_control-group">
 			<label class="x_control-label" for="object_target">링크추출범위</label>
 			<div class="x_controls">
