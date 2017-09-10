@@ -19,11 +19,11 @@
 		<div class="x_control-group">
 			<label class="x_control-label">오브젝트 캐시사용</label>
 			<div class="x_controls">
-				<select name="attendance_use_cache" disabled="disabled"|cond="!$object_cache_available">
+				<select name="use_cache" disabled="disabled"|cond="!$object_cache_available">
 					<option value="yes" selected="selected"|cond="$config->use_cache=='yes' && $object_cache_available">{$lang->use}</option>
 					<option value="no" selected="selected"|cond="$config->use_cache=='no' || !$object_cache_available">{$lang->notuse}</option>
 				</select>
-				<p>{$lang->attendance_use_cache_help}</p>
+				<p>오브젝트 캐시를 사용하여 성능을 향상시킵니다.</p>
 			</div>
 		</div>
 

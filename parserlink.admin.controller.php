@@ -75,6 +75,7 @@ class parserlinkAdminController extends parserlink
 		}
 
 		$this->setMessage('모든 데이터를 삭제 하였습니다.');
+
 		if(Context::get('success_return_url'))
 		{
 			$this->setRedirectUrl(Context::get('success_return_url'));
