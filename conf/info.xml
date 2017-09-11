@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="0.2">
 	<title xml:lang="ko">XE 임베드 파싱모듈</title>
-	<version>0.2</version>
-	<date>2017-08-29</date>
+	<version>1.0</version>
+	<date>2017-09-11</date>
 
 	<author link="http://www.bjrambo.com/">
 		<name xml:lang="ko">BJ람보</name>
