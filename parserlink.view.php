@@ -244,14 +244,15 @@ class parserlinkView extends parserlink
 			if (strtolower($node['attributes']['property']) == 'og:title')
 			{
 				$return_array['title'] = trim($node['attributes']['content']);
-				if ($return_array['title'])
-				{
-					break;
-				}
 			}
 			else if (strtolower($node['attributes']['name']) == 'twitter:title')
 			{
 				$return_array['title'] = trim($node['attributes']['content']);
+			}
+
+			if (strtolower($node['attributes']['property'] == 'og:url'))
+			{
+				$return_array['url'] = trim($node['attributes']['content']);
 			}
 		}
 		if (!$return_array['title'])

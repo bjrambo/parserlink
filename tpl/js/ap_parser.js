@@ -380,7 +380,12 @@
 					$('input[name=' + tit + i + ']').remove();
 
 					// Set Content of URL, Current Image Information, and the Number of Total Images
-					var domain = urls[i].split('//')[1].split('/')[0];
+					if(data.url) {
+						var domain = data.url.split('//')[1].split('/')[0];
+					} else {
+						var domain = urls[i].split('//')[1].split('/')[0];
+					}
+
 					ap_parser_print_domain == 'N' ? $('#' + prefix + uri + i).remove() : $('#' + prefix + uri + i + ' a').attr('href', urls[i]).html(domain);
 					var total_images = parseInt(data.total_images);
 
