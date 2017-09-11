@@ -17,7 +17,7 @@
 	else x = $('.xe_content');
 
 	// Extract Paragraphs with Regulr Expression
-	var ps = x.find('p').filter(function () {
+	var ps = x.find('div, p, a').filter(function () {
 		return $(this).text().match(url_regex);
 	});
 	if (ps.length < 1) return;
