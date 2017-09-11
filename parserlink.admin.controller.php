@@ -38,6 +38,7 @@ class parserlinkAdminController extends parserlink
 			'youtube_width',
 			'use_mid_list',
 			'use_cache',
+			'use_db_data',
 			'cache_time',
 		);
 
@@ -74,6 +75,8 @@ class parserlinkAdminController extends parserlink
 		{
 			return $output;
 		}
+
+		getController('parserlink')->clearCache();
 
 		$this->setMessage('모든 데이터를 삭제 하였습니다.');
 

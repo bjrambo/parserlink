@@ -94,4 +94,15 @@ class parserlinkController extends parserlink
 	{
 
 	}
+
+	function clearCache()
+	{
+		$oCacheHandler = $this->getCacheHandler();
+		if (!$oCacheHandler)
+		{
+			return;
+		}
+
+		$oCacheHandler->invalidateGroupKey('parserlink');
+	}
 }

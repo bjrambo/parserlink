@@ -16,20 +16,40 @@
 			</div>
 		</div>
 		<div class="x_control-group">
+			<label class="x_control-label">디비 데이터사용</label>
+			<div class="x_controls">
+				<select name="use_db_data">
+					<option value="yes" selected="selected"|cond="$config->use_db_data=='yes' && $object_cache_available">{$lang->use}</option>
+					<option value="no" selected="selected"|cond="$config->use_db_data=='no' || !$object_cache_available">{$lang->notuse}</option>
+				</select>
+				<p>디비데이터를 사용하여 해당 해당URL의 파싱을 더이상 하지 않게하여 성능을 향상시킵니다.</p>
+			</div>
+		</div>
+		<div class="x_control-group">
 			<label class="x_control-label">오브젝트 캐시사용</label>
 			<div class="x_controls">
-				<select name="use_cache" disabled="disabled"|cond="!$object_cache_available">
-					<option value="yes" selected="selected"|cond="$config->use_cache=='yes' && $object_cache_available">{$lang->use}</option>
-					<option value="no" selected="selected"|cond="$config->use_cache=='no' || !$object_cache_available">{$lang->notuse}</option>
+				<select name="use_cache" disabled="disabled"|cond="!$object_cache_available || $config->use_db_data !== 'yes'">
+					<option value="yes" selected="selected"|cond="$config->use_cache=='yes' && $object_cache_available && $config->use_db_data === 'yes'">{$lang->use}</option>
+					<option value="no" selected="selected"|cond="$config->use_cache=='no' || !$object_cache_available || $config->use_db_data !== 'yes'">{$lang->notuse}</option>
 				</select>
-				<p>오브젝트 캐시를 사용하여 성능을 향상시킵니다.</p>
+				<p>
+					디비데이터에 저장된 정보들을 오브젝트 캐시로 바꿔 성능을 향상시킵니다.(디비 사용하지 않고 캐시를 이용)
+				</p>
+				<p>
+					<block cond="$config->use_db_data !== 'yes'"> <span class="x_label x_label-important">경고 !</span> <span>디비 데이터를 사용하지 않아 오브젝트 캐시를 활성화 할 수 없습니다.</span></block>
+				</p>
+				<div cond="!$object_cache_available">
+					<block cond="!$object_cache_available"><span class="x_label x_label-important">경고 !</span> 오브젝트캐시를 사용하지 않고 있습니다. 오브젝트 캐시를 사용하셔야 합니다.</block>
+					<div>라이믹스 : 시스템설정 -> 고급설정 -> 캐시사용 설정</div>
+					<div>XE : files/config/db.config.php 파일 내에 $db_info->use_object_cache = 'file'; 과 같이 오브젝트 캐시 사용설정. 자세한사항은 XE메뉴얼 참고.</div>
+				</div>
 			</div>
 		</div>
 		<div class="x_control-group">
 			<label class="x_control-label" for="cache_time">캐시타임</label>
 			<div class="x_controls">
-				<input type="number" id="cache_time" name="cache_time" value="{$config->cache_time}" />
-				<p>디비와 캐시 타임이 지날경우 다시 한번 파싱하도록 하여 새로운 데이터로 수정해서 캐시를 저장합니다.</p>
+				<input type="number" id="cache_time" name="cache_time" value="{$config->cache_time}" /> 일
+				<p>디비와 캐시 타임이 지날경우 다시 한번 파싱하도록 하여 새로운 데이터로 수정해서 캐시를 저장합니다. 단위는 일입니다.</p>
 			</div>
 		</div>
 		<div class="x_control-group">

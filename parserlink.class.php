@@ -33,6 +33,12 @@ class parserlink extends ModuleObject
 			$config->use = 'N';
 		}
 
+		if ($config->use_db_data !== 'yes')
+		{
+			$config->use_cache = 'no';
+			$config->cache_time = 0;
+		}
+
 		self::$config_cache = $config;
 
 		return self::$config_cache;
@@ -42,6 +48,13 @@ class parserlink extends ModuleObject
 	{
 		/* @var $oModuleController moduleController */
 		$oModuleController = getController('module');
+
+		if ($config->use_db_data !== 'yes')
+		{
+			$config->use_cache = 'no';
+			$config->cache_time = 0;
+		}
+
 		$result = $oModuleController->insertModuleConfig($this->module, $config);
 		if ($result->toBool())
 		{
@@ -104,7 +117,7 @@ class parserlink extends ModuleObject
 		static $oCacheHandler = null;
 		if($oCacheHandler === null)
 		{
-			if(self::getConfig()->use_cache !== 'yes')
+			if (self::getConfig()->use_cache !== 'yes')
 			{
 				$oCacheHandler = false;
 			}
@@ -112,7 +125,7 @@ class parserlink extends ModuleObject
 			{
 				$oCacheHandler = CacheHandler::getInstance('object');
 
-				if(!$oCacheHandler->isSupport())
+				if (!$oCacheHandler->isSupport())
 				{
 					$oCacheHandler = false;
 				}
