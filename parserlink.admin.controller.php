@@ -38,6 +38,7 @@ class parserlinkAdminController extends parserlink
 			'youtube_width',
 			'use_mid_list',
 			'use_cache',
+			'cache_time',
 		);
 
 		foreach ($config_vars as $val)
