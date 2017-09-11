@@ -129,73 +129,76 @@ class parserlinkView extends parserlink
 			}
 		}
 
-		if (preg_match('/youtube.com/u', $url))
-		{
-			$sns_type = 'youtube';
-		}
-		else if (preg_match('/twitter.com/u', $url))
-		{
-			$sns_type = 'twitter';
-		}
-		else if (preg_match('/instagram.com/u', $url))
-		{
-			$sns_type = 'instagram';
-		}
-		else if (preg_match('/facebook.com/u', $url))
-		{
-			$sns_type = 'facebook';
-		}
-		else
-		{
-			$sns_type = 'default';
-		}
-		$configSnsEmbedName = $sns_type . '_embed';
-
-		$cache_time_sec = (int)$config->cache_time * 86400;
-
-		if (!$config->cache_time_day)
-		{
-			$cache_time_sec = 86400;
-		}
-
 		$oCacheHandler = $this->getCacheHandler();
-		if ($oCacheHandler)
+		if($config->use_db_data === 'yes')
 		{
-			if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), time() - $cache_time_sec)) !== false)
+			if (preg_match('/youtube.com/u', $url))
 			{
-				echo $result;
-				exit();
+				$sns_type = 'youtube';
 			}
-		}
-		$beforeDataUnixTime = time() - $cache_time_sec;
-
-		$search_args = new stdClass();
-		$search_args->site_url = $url;
-		$search_output = executeQuery('parserlink.getParserlinkData', $search_args);
-		$search_data = $search_output->data;
-		if ($search_data)
-		{
-			if ($search_data->update_time > $beforeDataUnixTime)
+			else if (preg_match('/twitter.com/u', $url))
 			{
-				if ($search_data->embed_type == $config->{$configSnsEmbedName})
+				$sns_type = 'twitter';
+			}
+			else if (preg_match('/instagram.com/u', $url))
+			{
+				$sns_type = 'instagram';
+			}
+			else if (preg_match('/facebook.com/u', $url))
+			{
+				$sns_type = 'facebook';
+			}
+			else
+			{
+				$sns_type = 'default';
+			}
+			$configSnsEmbedName = $sns_type . '_embed';
+
+			$cache_time_sec = (int)$config->cache_time * 86400;
+
+			if (!$config->cache_time_day)
+			{
+				$cache_time_sec = 86400;
+			}
+
+			if ($oCacheHandler)
+			{
+				if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), time() - $cache_time_sec)) !== false)
 				{
-					$unserializeData = unserialize($search_data->site_data);
-					echo $unserializeData;
-					if ($oCacheHandler)
-					{
-						$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
-					}
+					echo $result;
 					exit();
 				}
-				else if ($sns_type === 'default')
+			}
+			$beforeDataUnixTime = time() - $cache_time_sec;
+
+			$search_args = new stdClass();
+			$search_args->site_url = $url;
+			$search_output = executeQuery('parserlink.getParserlinkData', $search_args);
+			$search_data = $search_output->data;
+			if ($search_data)
+			{
+				if ($search_data->update_time > $beforeDataUnixTime)
 				{
-					$unserializeData = unserialize($search_data->site_data);
-					echo $unserializeData;
-					if ($oCacheHandler)
+					if ($search_data->embed_type == $config->{$configSnsEmbedName})
 					{
-						$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
+						$unserializeData = unserialize($search_data->site_data);
+						echo $unserializeData;
+						if ($oCacheHandler)
+						{
+							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
+						}
+						exit();
 					}
-					exit();
+					else if ($sns_type === 'default')
+					{
+						$unserializeData = unserialize($search_data->site_data);
+						echo $unserializeData;
+						if ($oCacheHandler)
+						{
+							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
+						}
+						exit();
+					}
 				}
 			}
 		}
@@ -419,38 +422,42 @@ class parserlinkView extends parserlink
 		}
 		$return_array['total_images'] = count($return_array['images']);
 		$return_array = json_encode($return_array);
-		$args = new stdClass();
-		$args->site_url = $url;
-		$args->module_srl = $module_info->module_srl;
-		$args->document_srl = $document_srl;
-		$args->site_data = serialize($return_array);
-		$args->update_time = time();
-		$args->sns_type = $sns_type;
-		$args->embed_type = $config->{$configSnsEmbedName};
-		if ($search_data)
+
+		if($config->use_db_data === 'yes')
 		{
-			$updateOutout = executeQuery('parserlink.updateParserlinkData', $args);
-			if (!$updateOutout->toBool())
+			$args = new stdClass();
+			$args->site_url = $url;
+			$args->module_srl = $module_info->module_srl;
+			$args->document_srl = $document_srl;
+			$args->site_data = serialize($return_array);
+			$args->update_time = time();
+			$args->sns_type = $sns_type;
+			$args->embed_type = $config->{$configSnsEmbedName};
+			if ($search_data)
 			{
-				return $updateOutout;
+				$updateOutout = executeQuery('parserlink.updateParserlinkData', $args);
+				if (!$updateOutout->toBool())
+				{
+					return $updateOutout;
+				}
+			}
+			else
+			{
+				$insertOutput = executeQuery('parserlink.insertParserlinkData', $args);
+				if (!$insertOutput->toBool())
+				{
+					return $insertOutput;
+				}
+			}
+
+			// Clear cache from url.
+			if ($oCacheHandler)
+			{
+				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}));
 			}
 		}
-		else
-		{
-			$insertOutput = executeQuery('parserlink.insertParserlinkData', $args);
-			if (!$insertOutput->toBool())
-			{
-				return $insertOutput;
-			}
-		}
+
 		echo $return_array;
-
-		// Clear cache from url.
-		if ($oCacheHandler)
-		{
-			$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}));
-		}
-
 		exit();
 	}
 }
