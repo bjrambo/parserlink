@@ -86,7 +86,7 @@ class parserlinkAdminController extends parserlink
 		}
 		else
 		{
-			$this->setRedire ctUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispParserlinkAdminDataList'));
+			$this->setRedirectUrl(getNotEncodedUrl('', 'module', 'admin', 'act', 'dispParserlinkAdminDataList'));
 		}
 	}
 }
