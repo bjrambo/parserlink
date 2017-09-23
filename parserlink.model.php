@@ -77,6 +77,7 @@ class parserlinkModel extends parserlink
 
 		$data = json_decode($response);
 
+		// Do not declare $args as stdClass. use the object in above.
 		$args->sns_data = $response;
 		$args->update_time = time();
 		$args->sns_type = 'instagram';

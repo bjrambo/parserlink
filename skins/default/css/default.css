@@ -88,3 +88,53 @@
 		width: auto;
 	}
 }
+
+.ap_parser_insta_tag_button{
+	display:none;
+}
+
+.ap_parser_insta {
+	margin-top:39px;
+}
+
+.updateinsta{
+	display:none;
+	position: absolute;
+	margin-left:20px;
+}
+.button-insta{
+	background:#1AAB8A;
+	color:#fff;
+	border:none;
+	height:30px;
+	font-size:1.6em;
+	padding:0 2em;
+	cursor:pointer;
+	transition:800ms ease all;
+	outline:none;
+}
+
+.button-insta:hover{
+	background:#fff;
+	color:#1AAB8A;
+}
+.button-insta:before,.button-insta:after{
+	content:'';
+	position:absolute;
+	top:0;
+	right:0;
+	height:2px;
+	width:0;
+	background: #1AAB8A;
+	transition:400ms ease all;
+}
+.button-insta:after{
+	right:inherit;
+	top:inherit;
+	left:0;
+	bottom:0;
+}
+.button-insta:hover:before,.button-insta:hover:after{
+	width:100%;
+	transition:800ms ease all;
+}
