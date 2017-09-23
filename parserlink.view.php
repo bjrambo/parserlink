@@ -197,14 +197,14 @@ class parserlinkView extends parserlink
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
 						}
+						$display->getDebugInfo();
 						exit();
 					}
 				}
 			}
 		}
-
 		// Get Data
-		$string = $oParserlinkModel->getReturn($url);
+		$string = $oParserlinkModel->getRemoteResource($url);
 		// Daum Blog & Cafe Url Re-arrange
 		if (strpos($url, 'http://blog.daum.net') !== false || strpos($url, 'http://cafe.daum.net') !== false)
 		{
@@ -226,7 +226,7 @@ class parserlinkView extends parserlink
 					}
 				}
 			}
-			$string = $oParserlinkModel->getReturn($url);
+			$string = $oParserlinkModel->getRemoteResource($url);
 		}
 		$string = str_replace(array('\n', '\r', '\t', '&nbsp;', '</span>', '</div>'), '', $string);
 		$string = preg_replace('/(<(div|span)\s[^>]+\s?>)/', '', $string);
@@ -296,7 +296,7 @@ class parserlinkView extends parserlink
 			$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
 			if (strtolower($node['attributes']['property']) == 'naverblog:profile_image')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -304,7 +304,7 @@ class parserlinkView extends parserlink
 			}
 			else if (strtolower($node['attributes']['property']) == 'og:image')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -312,7 +312,7 @@ class parserlinkView extends parserlink
 			}
 			else if (strtolower($node['attributes']['name']) == 'twitter:image:src')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
 				if (count($images))
 				{
 					break;
@@ -365,7 +365,7 @@ class parserlinkView extends parserlink
 					}
 				}
 				$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
+				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
 			}
 			// Other Images
 			else
@@ -408,7 +408,7 @@ class parserlinkView extends parserlink
 						{
 							if (($width > 0 && $height > 0 && (($width / $height) < 3) && (($width / $height) > .2)) && strpos($img, 'logo') === false)
 							{
-								$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getOuterImageString($img)));
+								$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
 							}
 						}
 

@@ -44,6 +44,11 @@ class parserlinkModel extends parserlink
 		$this->add('data', $media);
 	}
 
+	/**
+	 * Check Values in $url.
+	 * @param $value
+	 * @return string
+	 */
 	function checkValues($value)
 	{
 		$value = trim($value);
@@ -175,7 +180,7 @@ class parserlinkModel extends parserlink
 	}
 
 
-	function getReturn($url)
+	function getRemoteResource($url)
 	{
 		$url = str_replace("&amp;", '&', $url);
 
@@ -193,7 +198,7 @@ class parserlinkModel extends parserlink
 		return $return;
 	}
 
-	function getOuterImageString($url)
+	function getRemoteResourceImageString($url)
 	{
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_URL, $url);
