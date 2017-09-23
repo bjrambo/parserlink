@@ -7,7 +7,7 @@ class parserlinkModel extends parserlink
 
 	/**
 	 * Get instagram by username.
-	 * @return bool
+	 * @return bool|object
 	 */
 	function getInstagramProfileList()
 	{
@@ -18,10 +18,32 @@ class parserlinkModel extends parserlink
 		}
 
 		$url = "https://www.instagram.com/$username/?__a=1";
+		$args = new stdClass();
+		$args->sns_url = $url;
+		$output = executeQuery('parserlink.getSnsData', $args);
+		if($output->data)
+		{
+			$instaData = $output->data;
+
+			$instaDataJsonDecode = json_decode($instaData->sns_data);
+			$mediaData = $instaDataJsonDecode->user->media->nodes;
+			$this->add('data', $mediaData);
+			return;
+		}
 		$response = FileHandler::getRemoteResource($url);
 
-		$data = json_decode($response, true);
-		$media = $data['user']['media']['nodes'];
+		$data = json_decode($response);
+
+		$media = $data->user->media->nodes;
+		$args->sns_data = $response;
+		$args->update_time = time();
+		$args->sns_type = 'instagram';
+		$output = executeQuery('parserlink.insertSnsData', $args);
+
+		if(!$output->toBool())
+		{
+			return $output;
+		}
 		$this->add('data', $media);
 	}
 
@@ -191,6 +213,7 @@ class parserlinkModel extends parserlink
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.5) Gecko/20041107 Firefox/1.0');
 		$return = curl_exec($ch);

@@ -1,0 +1,11 @@
+<query id="insertSnsData" action="insert">
+	<tables>
+		<table name="parserlink_sns_data" />
+	</tables>
+	<columns>
+		<column name="sns_url" var="sns_url" notnull="notnull" />
+		<column name="sns_data" var="sns_data" notnull="notnull" />
+		<column name="update_time" var="update_time" notnull="notnull" />
+		<column name="sns_type" var="sns_type" notnull="notnull" />
+	</columns>
+</query>

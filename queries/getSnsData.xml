@@ -1,0 +1,11 @@
+<query id="getSnsData" action="select">
+	<tables>
+		<table name="parserlink_sns_data" />
+	</tables>
+	<columns>
+		<column name="*" />
+	</columns>
+	<conditions>
+		<condition operation="equal" column="sns_url" var="sns_url" notnull="notnull" />
+	</conditions>
+</query>
