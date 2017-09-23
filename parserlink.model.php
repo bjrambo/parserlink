@@ -7,6 +7,8 @@ class parserlinkModel extends parserlink
 
 	/**
 	 * Get instagram by username.
+	 * is not use insta db data. it's not completed.
+	 * TODO(BJRambo): This use the Config setting, and object cache.
 	 * @return bool|object
 	 */
 	function getInstagramProfileList()
