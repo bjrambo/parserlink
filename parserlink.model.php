@@ -34,16 +34,16 @@ class parserlinkModel extends parserlink
 
 		$data = json_decode($response);
 
-		$media = $data->user->media->nodes;
 		$args->sns_data = $response;
 		$args->update_time = time();
 		$args->sns_type = 'instagram';
 		$output = executeQuery('parserlink.insertSnsData', $args);
-
 		if(!$output->toBool())
 		{
 			return $output;
 		}
+
+		$media = $data->user->media->nodes;
 		$this->add('data', $media);
 	}
 
@@ -59,10 +59,35 @@ class parserlinkModel extends parserlink
 		$tag = urlencode($tag);
 
 		$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+
+		$args = new stdClass();
+		$args->sns_url = $url;
+		$output = executeQuery('parserlink.getSnsData', $args);
+		if($output->data)
+		{
+			$instaData = $output->data;
+
+			$instaDataJsonDecode = json_decode($instaData->sns_data);
+			$mediaData = $instaDataJsonDecode->tag->media->nodes;
+			$this->add('data', $mediaData);
+			return;
+		}
+
 		$response = FileHandler::getRemoteResource($url);
 
-		$data = json_decode($response, true);
-		$media = $data['tag']['media']['nodes'];
+		$data = json_decode($response);
+
+		$args->sns_data = $response;
+		$args->update_time = time();
+		$args->sns_type = 'instagram';
+		$output = executeQuery('parserlink.insertSnsData', $args);
+		if(!$output->toBool())
+		{
+			return $output;
+		}
+		Context::set('insta_type', 'tag');
+
+		$media = $data->tag->media->nodes;
 		$this->add('data', $media);
 	}
 

@@ -90,11 +90,6 @@ class parserlinkController extends parserlink
 		Context::addCSSFile($template_path . '/css/default.css');
 	}
 
-	function triggerAfterDisplay()
-	{
-
-	}
-
 	function clearCache()
 	{
 		$oCacheHandler = $this->getCacheHandler();
@@ -104,5 +99,40 @@ class parserlinkController extends parserlink
 		}
 
 		$oCacheHandler->invalidateGroupKey('parserlink');
+	}
+
+	function procParserlinkUpdateInstagram()
+	{
+		$tag = Context::get('tag');
+		if(!$tag)
+		{
+			return false;
+		}
+
+		$tag = urldecode($tag);
+		$tag = urlencode($tag);
+
+		$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+		$response = FileHandler::getRemoteResource($url);
+
+		$args = new stdClass();
+		$args->sns_url = $url;
+		$args->sns_data = $response;
+		$args->update_time = time();
+		$args->sns_type = 'instagram';
+		$output = executeQuery('parserlink.updateSnsData', $args);
+		if(!$output->toBool())
+		{
+			return $output;
+		}
+
+		if (Context::get('success_return_url'))
+		{
+			$this->setRedirectUrl(Context::get('success_return_url'));
+		}
+		else
+		{
+			$this->setRedirectUrl(getNotEncodedUrl('', 'mid', Context::get('mid'), 'document_srl', Context::get('parser_document_srl')));
+		}
 	}
 }

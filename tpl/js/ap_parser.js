@@ -272,7 +272,14 @@
 				var src = '';
 				$.each(obj.data, function(index, value) {
 					if (index === 0) {
-						$('#'+prefix+cnt+i).find('.ap_parser_info').before('<div class="ap_parser_image_wrap">'+
+						$('#'+prefix+cnt+i).find('.ap_parser_info').before('<form action="./" method="post" class="x_form-horizontal" id="fo_parserlink">'+
+							'<input type="hidden" name="module" value="parserlink" />' +
+							'<input type="hidden" name="act" value="procParserlinkUpdateInstagram" />' +
+							'<input type="hidden" name="tag" value="'+ url_match[4] +'" />' +
+							'<input type="hidden" name="parser_document_srl" value="'+ ap_parser_document_srl +'" />' +
+							'<button type="submit">등록</button>' +
+							'</form>' +
+							'<div class="ap_parser_image_wrap">'+
 							'<a href="https://www.instagram.com/p/'+value.code+'" target="'+ap_parser_external_link+'">'+
 							'<div class="ap_parser_images">'+
 							'<img src="'+value.thumbnail_src+'">'+
@@ -454,7 +461,6 @@
 								$('img#' + prefix + img_id + i + '_' + index).hide();
 								if (index > 1) {
 									new_index = parseInt(index) - parseInt(1);
-									;
 								} else {
 									new_index = total_images;
 								}
