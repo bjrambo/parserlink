@@ -2,6 +2,9 @@
 
 class parserlinkView extends parserlink
 {
+	/**
+	 * @return object|void
+	 */
 	function dispDefaultPreviewByUrl()
 	{
 		$config = $this->getConfig();
@@ -156,7 +159,7 @@ class parserlinkView extends parserlink
 
 			$cache_time_sec = (int)$config->cache_time * 86400;
 
-			if (!$config->cache_time_day)
+			if (!$config->cache_time)
 			{
 				$cache_time_sec = 86400;
 			}
@@ -166,7 +169,7 @@ class parserlinkView extends parserlink
 				if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), time() - $cache_time_sec)) !== false)
 				{
 					echo $result;
-					exit();
+					return;
 				}
 			}
 			$beforeDataUnixTime = time() - $cache_time_sec;
@@ -187,7 +190,7 @@ class parserlinkView extends parserlink
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
 						}
-						exit();
+						return;
 					}
 					else if ($sns_type === 'default')
 					{
@@ -197,8 +200,7 @@ class parserlinkView extends parserlink
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
 						}
-						$display->getDebugInfo();
-						exit();
+						return;
 					}
 				}
 			}
@@ -457,8 +459,7 @@ class parserlinkView extends parserlink
 				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}));
 			}
 		}
-
 		echo $return_array;
-		exit();
+		return;
 	}
 }
