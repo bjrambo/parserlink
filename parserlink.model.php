@@ -44,7 +44,6 @@ class parserlinkModel extends parserlink
 				{
 					if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"), time() - $cache_time_sec)) !== false)
 					{
-						debugPrint($result);
 						$this->add('data', $result);
 						return;
 					}
@@ -56,7 +55,6 @@ class parserlinkModel extends parserlink
 				{
 					if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:tag:$tag"), time() - $cache_time_sec)) !== false)
 					{
-						debugPrint($result);
 						$this->add('data', $result);
 						return;
 					}
