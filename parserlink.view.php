@@ -168,8 +168,8 @@ class parserlinkView extends parserlink
 			{
 				if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), time() - $cache_time_sec)) !== false)
 				{
-					echo $result;
-					exit();
+					$this->add('return_array', $result);
+					return;
 				}
 			}
 			$beforeDataUnixTime = time() - $cache_time_sec;
@@ -185,22 +185,22 @@ class parserlinkView extends parserlink
 					if ($search_data->embed_type == $config->{$configSnsEmbedName})
 					{
 						$unserializeData = unserialize($search_data->site_data);
-						echo $unserializeData;
+						$this->add('return_array', $unserializeData);
 						if ($oCacheHandler)
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
 						}
-						exit();
+						return;
 					}
 					else if ($sns_type === 'default')
 					{
 						$unserializeData = unserialize($search_data->site_data);
-						echo $unserializeData;
+						$this->add('return_array', $unserializeData);
 						if ($oCacheHandler)
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
 						}
-						exit();
+						return;
 					}
 				}
 			}
@@ -424,7 +424,6 @@ class parserlinkView extends parserlink
 			$return_array['images'] = array_values($images);
 		}
 		$return_array['total_images'] = count($return_array['images']);
-		$return_array = json_encode($return_array);
 
 		if($config->use_db_data === 'yes')
 		{
@@ -459,7 +458,8 @@ class parserlinkView extends parserlink
 				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}));
 			}
 		}
-		echo $return_array;
-		exit();
+
+		$this->add('return_array', $return_array);
+		return;
 	}
 }
