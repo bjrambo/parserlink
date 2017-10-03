@@ -7,7 +7,6 @@ class parserlinkModel extends parserlink
 
 	/**
 	 * getInstagram in profile and tag.
-	 * TODO(BJRambo): This use the Config setting, and object cache.
 	 * @return object|void
 	 */
 	function getInstagramData()
@@ -28,33 +27,51 @@ class parserlinkModel extends parserlink
 			}
 		}
 
+		$config = $this->getConfig();
+		$oCacheHandler = $this->getCacheHandler();
+
+		$cache_time_sec = (int)$config->cache_time * 86400;
+		if(!$config->cache_time)
+		{
+			$cache_time_sec = 86400;
+		}
+		$beforeDataUnixTime = time() - $cache_time_sec;
 		switch ($type)
 		{
 			case 'user':
 				$url = "https://www.instagram.com/$userName/?__a=1";
+				if ($oCacheHandler)
+				{
+					if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"), time() - $cache_time_sec)) !== false)
+					{
+						debugPrint($result);
+						$this->add('data', $result);
+						return;
+					}
+				}
 				break;
 			case 'tag':
 				$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+				if ($oCacheHandler)
+				{
+					if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:tag:$tag"), time() - $cache_time_sec)) !== false)
+					{
+						debugPrint($result);
+						$this->add('data', $result);
+						return;
+					}
+				}
 				break;
 			// If type is not have a data, execute the return void.
 			default:
 				return;
 		}
 
-		$config = $this->getConfig();
 		$args = new stdClass();
 		if($config->use_db_data === 'yes')
 		{
-			$cache_time_sec = (int)$config->cache_time * 86400;
-			if(!$config->cache_time)
-			{
-				$cache_time_sec = 86400;
-			}
-			$beforeDataUnixTime = time() - $cache_time_sec;
-
 			$args->sns_url = $url;
 			$output = executeQuery('parserlink.getSnsData', $args);
-
 			if($output->data)
 			{
 				if($output->data->update_time > $beforeDataUnixTime)
@@ -64,6 +81,17 @@ class parserlinkModel extends parserlink
 					$instaDataJsonDecode = json_decode($instaData->sns_data);
 					$mediaData = $instaDataJsonDecode->{$type}->media->nodes;
 					$this->add('data', $mediaData);
+					if ($oCacheHandler)
+					{
+						if($type == 'user')
+						{
+							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"), $mediaData, $cache_time_sec);
+						}
+						else
+						{
+							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:tag:$tag"), $mediaData, $cache_time_sec);
+						}
+					}
 					return;
 				}
 			}
@@ -72,11 +100,13 @@ class parserlinkModel extends parserlink
 		$response = FileHandler::getRemoteResource($url);
 
 		$data = json_decode($response);
+
 		if($config->use_db_data === 'yes')
 		{
 			$args->sns_data = $response;
 			$args->update_time = time();
 			$args->sns_type = 'instagram';
+			/** @var $output 74 line */
 			if($output->data)
 			{
 				$output = executeQuery('parserlink.updateSnsData', $args);
@@ -93,6 +123,18 @@ class parserlinkModel extends parserlink
 
 		$media = $data->{$type}->media->nodes;
 		$this->add('data', $media);
+
+		if ($oCacheHandler)
+		{
+			if($type == 'user')
+			{
+				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"));
+			}
+			else
+			{
+				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:tag:$tag"));
+			}
+		}
 		return;
 	}
 

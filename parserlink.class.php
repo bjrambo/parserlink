@@ -112,7 +112,7 @@ class parserlink extends ModuleObject
 		return new Object();
 	}
 
-	function getCacheHandler()
+	protected function getCacheHandler()
 	{
 		static $oCacheHandler = null;
 		if($oCacheHandler === null)
