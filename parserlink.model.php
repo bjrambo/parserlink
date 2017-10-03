@@ -48,30 +48,54 @@ class parserlinkModel extends parserlink
 				return;
 		}
 
+		$config = $this->getConfig();
 		$args = new stdClass();
-		$args->sns_url = $url;
-		$output = executeQuery('parserlink.getSnsData', $args);
-		if($output->data)
+		if($config->use_db_data === 'yes')
 		{
-			$instaData = $output->data;
+			$cache_time_sec = (int)$config->cache_time * 86400;
+			if(!$config->cache_time)
+			{
+				$cache_time_sec = 86400;
+			}
+			$beforeDataUnixTime = time() - $cache_time_sec;
 
-			$instaDataJsonDecode = json_decode($instaData->sns_data);
-			$mediaData = $instaDataJsonDecode->{$type}->media->nodes;
-			$this->add('data', $mediaData);
-			return;
+			$args->sns_url = $url;
+			$output = executeQuery('parserlink.getSnsData', $args);
+
+			if($output->data)
+			{
+				if($output->data->update_time > $beforeDataUnixTime)
+				{
+					$instaData = $output->data;
+
+					$instaDataJsonDecode = json_decode($instaData->sns_data);
+					$mediaData = $instaDataJsonDecode->{$type}->media->nodes;
+					$this->add('data', $mediaData);
+					return;
+				}
+			}
 		}
 
 		$response = FileHandler::getRemoteResource($url);
 
 		$data = json_decode($response);
-
-		$args->sns_data = $response;
-		$args->update_time = time();
-		$args->sns_type = 'instagram';
-		$output = executeQuery('parserlink.insertSnsData', $args);
-		if(!$output->toBool())
+		if($config->use_db_data === 'yes')
 		{
-			return;
+			$args->sns_data = $response;
+			$args->update_time = time();
+			$args->sns_type = 'instagram';
+			if($output->data)
+			{
+				$output = executeQuery('parserlink.updateSnsData', $args);
+			}
+			else
+			{
+				$output = executeQuery('parserlink.insertSnsData', $args);
+			}
+			if(!$output->toBool())
+			{
+				return;
+			}
 		}
 
 		$media = $data->{$type}->media->nodes;
