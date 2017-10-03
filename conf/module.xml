@@ -12,8 +12,7 @@
 		<action name="procParserlinkAdminDeleteAllData" type="controller" />
 
 		<!-- ETC -->
-		<action name="getInstagramProfileList" type="model" />
-		<action name="getInstagramTagList" type="model" />
+		<action name="getInstagramData" type="model" />
 		<action name="dispDefaultPreviewByUrl" type="view" />
 
 		<!-- User Controller -->

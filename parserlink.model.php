@@ -11,56 +11,42 @@ class parserlinkModel extends parserlink
 	 * TODO(BJRambo): This use the Config setting, and object cache.
 	 * @return bool|object
 	 */
-	function getInstagramProfileList()
+
+	/**
+	 * getInstagram in profile and tag.
+	 * TODO(BJRambo): This use the Config setting, and object cache.
+	 * @return object|void
+	 */
+	function getInstagramData()
 	{
-		$username = Context::get('username');
-		if(!$username)
-		{
-			return false;
-		}
-
-		$url = "https://www.instagram.com/$username/?__a=1";
-		$args = new stdClass();
-		$args->sns_url = $url;
-		$output = executeQuery('parserlink.getSnsData', $args);
-		if($output->data)
-		{
-			$instaData = $output->data;
-
-			$instaDataJsonDecode = json_decode($instaData->sns_data);
-			$mediaData = $instaDataJsonDecode->user->media->nodes;
-			$this->add('data', $mediaData);
-			return;
-		}
-		$response = FileHandler::getRemoteResource($url);
-
-		$data = json_decode($response);
-
-		$args->sns_data = $response;
-		$args->update_time = time();
-		$args->sns_type = 'instagram';
-		$output = executeQuery('parserlink.insertSnsData', $args);
-		if(!$output->toBool())
-		{
-			return $output;
-		}
-
-		$media = $data->user->media->nodes;
-		$this->add('data', $media);
-	}
-
-	function getInstagramTagList()
-	{
+		$type = Context::get('type');
+		$userName = Context::get('username');
 		$tag = Context::get('tag');
-		if(!$tag)
+
+		if(!$type)
 		{
-			return false;
+			if($userName)
+			{
+				$type = 'user';
+			}
+			else
+			{
+				$type = 'tag';
+			}
 		}
 
-		$tag = urldecode($tag);
-		$tag = urlencode($tag);
-
-		$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+		switch ($type)
+		{
+			case 'user':
+				$url = "https://www.instagram.com/$userName/?__a=1";
+				break;
+			case 'tag':
+				$url = "https://www.instagram.com/explore/tags/$tag/?__a=1";
+				break;
+			// If type is not have a data, execute the return void.
+			default:
+				return;
+		}
 
 		$args = new stdClass();
 		$args->sns_url = $url;
@@ -70,7 +56,7 @@ class parserlinkModel extends parserlink
 			$instaData = $output->data;
 
 			$instaDataJsonDecode = json_decode($instaData->sns_data);
-			$mediaData = $instaDataJsonDecode->tag->media->nodes;
+			$mediaData = $instaDataJsonDecode->{$type}->media->nodes;
 			$this->add('data', $mediaData);
 			return;
 		}
@@ -79,19 +65,18 @@ class parserlinkModel extends parserlink
 
 		$data = json_decode($response);
 
-		// Do not declare $args as stdClass. use the object in above.
 		$args->sns_data = $response;
 		$args->update_time = time();
 		$args->sns_type = 'instagram';
 		$output = executeQuery('parserlink.insertSnsData', $args);
 		if(!$output->toBool())
 		{
-			return $output;
+			return;
 		}
-		Context::set('insta_type', 'tag');
 
-		$media = $data->tag->media->nodes;
+		$media = $data->{$type}->media->nodes;
 		$this->add('data', $media);
+		return;
 	}
 
 	/**

@@ -268,7 +268,7 @@
 		} else if (url_match[2] == 'explore' && url_match[3] == 'tags') {
 			// Instagram Tags
 			getPreview(i);
-			$.exec_json('parserlink.getInstagramTagList', {'tag': url_match[4]}, function (obj) {
+			$.exec_json('parserlink.getInstagramData', {'tag': url_match[4], 'type': 'tag'}, function (obj) {
 				var src = '';
 				$.each(obj.data, function(index, value) {
 					if (index === 0) {
@@ -304,7 +304,7 @@
 			var regExp = /http(?:s)?:\/\/(?:www\.)?instagram\.com\/([a-zA-Z0-9_]+)/;
 			var matches = urls[i].match(regExp);
 			if (matches && $.inArray(matches[1], ['', 'about', 'developer', 'legal', 'explore']) == -1) {
-				$.exec_json('parserlink.getInstagramProfileList', {'username': url_match[2]}, function (obj) {
+				$.exec_json('parserlink.getInstagramData', {'username': url_match[2], 'type': 'user'}, function (obj) {
 					var src = '';
 					$.each(obj.data, function (index, value) {
 						src += '<a class="ap_parser_insta_link" href="https://www.instagram.com/p/' + value.code + '" target="'+ap_parser_external_link+'">'
