@@ -1,0 +1,5 @@
+<query id="deleteParserlinkAllSnsData" action="delete">
+	<tables>
+		<table name="parserlink_sns_data" />
+	</tables>
+</query>

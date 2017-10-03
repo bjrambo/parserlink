@@ -1,0 +1,15 @@
+<query id="getParserlinkSnsDataList" action="select">
+	<tables>
+		<table name="parserlink_sns_data" />
+	</tables>
+
+	<columns>
+		<column name="*" />
+	</columns>
+	<navigation>
+		<index default="update_time" var="list_order" order="desc" />
+		<list_count var="list_count" default="20" />
+		<page_count var="page_count" default="10" />
+		<page var="page" default="1"  />
+	</navigation>
+</query>
