@@ -367,7 +367,6 @@
 			},
 			contentType: "application/json; charset=utf-8",
 			success: function (data) {
-				console.log(data);
 				if (data.return_array == null || data.return_array.title == null || data.return_array.title == '' || data.return_array.tobool == false)
 				{
 					$('#' + prefix + cnt + i).parent('.' + container).remove();
