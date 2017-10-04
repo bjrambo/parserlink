@@ -5,7 +5,7 @@ class parserlinkView extends parserlink
 	/**
 	 * @return object|void
 	 */
-	function dispDefaultPreviewByUrl()
+	function dispParserlinkDefaultPreviewByUrl()
 	{
 		$config = $this->getConfig();
 		if ($config->use !== 'Y')
