@@ -27,6 +27,12 @@ class parserlinkModel extends parserlink
 			}
 		}
 
+		if($tag)
+		{
+			$tag = urldecode($tag);
+			$tag = urlencode($tag);
+		}
+
 		$config = $this->getConfig();
 		$oCacheHandler = $this->getCacheHandler();
 
