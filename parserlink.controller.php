@@ -6,13 +6,13 @@ class parserlinkController extends parserlink
 		$config = self::getConfig();
 		if($config->use !== 'Y')
 		{
-			return new Object();
+			return $this->makeObject();
 		}
 
 		$document_srl = Context::get('document_srl');
 		if (!$document_srl)
 		{
-			return new Object();
+			return $this->makeObject();
 		}
 
 		/* @var $oDocumentModel documentModel */
@@ -24,14 +24,14 @@ class parserlinkController extends parserlink
 
 		if(is_array($config->use_mid_list) && in_array($module_info->module_srl, $config->use_mid_list))
 		{
-			return new Object();
+			return $this->makeObject();
 		}
 
 		$oDocument = $oDocumentModel->getDocument($document_srl);
 
 		if(!$oDocument->document_srl)
 		{
-			return new Object();
+			return $this->makeObject();
 		}
 
 		$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
