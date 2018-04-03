@@ -353,20 +353,20 @@
 	}
 
 	function getPreview(i) {
-		jQuery.ajax({
-			type:'GET',
+		$.ajax({
+			type:'POST',
 			url: request_uri,
 			dataType: 'json',
 			data:{
-
 				module: 'parserlink',
-				act: 'dispParserlinkDefaultPreviewByUrl',
+				act: 'defaultPreviewByUrl',
 				url: urls[i],
 				img_len: ap_parser_image_length,
 				parser_document_srl: ap_parser_document_srl
 			},
 			contentType: "application/json; charset=utf-8",
 			success: function (data) {
+				console.log(data);
 				if (data.return_array == null || data.return_array.title == null || data.return_array.title == '' || data.return_array.tobool == false)
 				{
 					$('#' + prefix + cnt + i).parent('.' + container).remove();
@@ -477,6 +477,7 @@
 				window.show_waiting_message = true;
 			},
 			error: function () {
+				console.log('error');
 				$('#' + prefix + cnt + i).parent('.' + container).remove();
 			}
 		});

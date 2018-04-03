@@ -15,7 +15,7 @@
 
 		<!-- ETC -->
 		<action name="getInstagramData" type="model" />
-		<action name="dispParserlinkDefaultPreviewByUrl" type="view" />
+		<action name="defaultPreviewByUrl" type="model" />
 
 		<!-- User Controller -->
 		<action name="procParserlinkUpdateInstagram" type="controller" />
