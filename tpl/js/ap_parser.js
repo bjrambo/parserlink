@@ -364,6 +364,7 @@
 				img_len: ap_parser_image_length,
 				parser_document_srl: ap_parser_document_srl
 			},
+			contentType: "application/json; charset=utf-8",
 			success: function (data) {
 				if (data.return_array == null || data.return_array.title == null || data.return_array.title == '' || data.return_array.tobool == false)
 				{
