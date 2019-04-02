@@ -309,7 +309,7 @@ class parserlinkModel extends parserlink
 		return $image_string;
 	}
 
-	function defaultPreviewByUrl()
+	function defaultPreviewByUrl($url = null, $img_len = null, $document_srl = null, $type = null)
 	{
 		$config = $this->getConfig();
 		if ($config->use !== 'Y')
@@ -317,10 +317,20 @@ class parserlinkModel extends parserlink
 			return;
 		}
 
-		$url = urldecode(Context::get('url'));
-		$img_len = Context::get('img_len');
+		if(!$url)
+		{
+			$url = urldecode(Context::get('url'));
+		}
+		
+		if(!$img_len)
+		{
+			$img_len = Context::get('img_len');
+		}
 
-		$document_srl = Context::get('parser_document_srl');
+		if(!$document_srl)
+		{
+			$document_srl = Context::get('parser_document_srl');
+		}
 		$module_info = getModel('module')->getModuleInfoByDocumentSrl($document_srl);
 
 		$return_array = array();
@@ -472,8 +482,15 @@ class parserlinkModel extends parserlink
 			{
 				if (($result = $oCacheHandler->get($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), time() - $cache_time_sec)) !== false)
 				{
-					$this->add('return_array', $result);
-					return;
+					if ($type == 'extra')
+					{
+						return $result;
+					}
+					else
+					{
+						$this->add('return_array', $result);
+						return;
+					}
 				}
 			}
 			$beforeDataUnixTime = time() - $cache_time_sec;
@@ -489,7 +506,14 @@ class parserlinkModel extends parserlink
 					if ($search_data->embed_type == $config->{$configSnsEmbedName})
 					{
 						$unserializeData = unserialize($search_data->site_data);
-						$this->add('return_array', $unserializeData);
+						if ($type == 'extra')
+						{
+							return $unserializeData;
+						}
+						else
+						{
+							$this->add('return_array', $unserializeData);
+						}
 						if ($oCacheHandler)
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);
@@ -500,6 +524,14 @@ class parserlinkModel extends parserlink
 					{
 						$unserializeData = unserialize($search_data->site_data);
 						$this->add('return_array', $unserializeData);
+						if ($type == 'extra')
+						{
+							return $unserializeData;
+						}
+						else
+						{
+							$this->add('return_array', $unserializeData);
+						}
 						if ($oCacheHandler)
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:sns_type:$sns_type:embed:" . $config->{$configSnsEmbedName}), $unserializeData, $cache_time_sec);

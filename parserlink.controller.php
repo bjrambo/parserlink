@@ -1,10 +1,11 @@
 <?php
+
 class parserlinkController extends parserlink
 {
 	function triggerAfterModuleHandlerInit()
 	{
 		$config = self::getConfig();
-		if($config->use !== 'Y')
+		if ($config->use !== 'Y')
 		{
 			return $this->makeObject();
 		}
@@ -22,20 +23,20 @@ class parserlinkController extends parserlink
 		$oModuleModel = getModel('module');
 		$module_info = $oModuleModel->getModuleInfoByDocumentSrl($document_srl);
 
-		if(is_array($config->use_mid_list) && in_array($module_info->module_srl, $config->use_mid_list))
+		if (is_array($config->use_mid_list) && in_array($module_info->module_srl, $config->use_mid_list))
 		{
 			return $this->makeObject();
 		}
 
 		$oDocument = $oDocumentModel->getDocument($document_srl);
 
-		if(!$oDocument->document_srl)
+		if (!$oDocument->document_srl)
 		{
 			return $this->makeObject();
 		}
 
 		$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
-		if(!is_dir($template_path)||!$config->skin)
+		if (!is_dir($template_path) || !$config->skin)
 		{
 			$config->skin = 'default';
 			$template_path = sprintf("%sskins/%s/", $this->module_path, $config->skin);
@@ -44,10 +45,18 @@ class parserlinkController extends parserlink
 		$template_output = $oTemplate->compile($template_path, 'index.html');
 		$template_output = preg_replace('/\r\n|\r|\n|\t/', '', $template_output);
 
-		$object_target = in_array($config->object_target, array('document', 'comment', 'all')) ? $config->object_target : 'document';
+		$object_target = in_array($config->object_target, array(
+			'document',
+			'comment',
+			'all'
+		)) ? $config->object_target : 'document';
 		$exception = preg_replace('/\r\n|\r|\n|\t|\s/', '', $config->exception);
 
-		$print_align = in_array($config->print_align, array('center', 'left', 'right')) ? $config->print_align : 'center';
+		$print_align = in_array($config->print_align, array(
+			'center',
+			'left',
+			'right'
+		)) ? $config->print_align : 'center';
 		$loading_image = $config->loading_image ? $config->loading_image : 'Y';
 		$title_length = (int)preg_replace('/[^0-9]*/s', '', $config->title_length);
 		$print_domain = $config->print_domain ? $config->print_domain : 'Y';
@@ -104,7 +113,7 @@ class parserlinkController extends parserlink
 	function procParserlinkUpdateInstagram()
 	{
 		$tag = Context::get('tag');
-		if(!$tag)
+		if (!$tag)
 		{
 			return false;
 		}
@@ -121,7 +130,7 @@ class parserlinkController extends parserlink
 		$args->update_time = time();
 		$args->sns_type = 'instagram';
 		$output = executeQuery('parserlink.updateSnsData', $args);
-		if(!$output->toBool())
+		if (!$output->toBool())
 		{
 			return $output;
 		}
@@ -134,5 +143,67 @@ class parserlinkController extends parserlink
 		{
 			$this->setRedirectUrl(getNotEncodedUrl('', 'mid', Context::get('mid'), 'document_srl', Context::get('parser_document_srl')));
 		}
+	}
+
+
+	/**
+	 * @param $obj
+	 * @return BaseObject|Object|void
+	 */
+	public function triggerAfterInsertDocument($obj)
+	{
+		/** @var documentModel $oDocumentModel */
+		$oDocumentModel = getModel('document');
+		$oDocument = $oDocumentModel->getDocument($obj->document_srl);
+		$config = self::getConfig();
+		if ($config->use !== 'Y')
+		{
+			return $this->makeObject();
+		}
+
+		$document_srl = $obj->document_srl;
+		if (!$document_srl)
+		{
+			return;
+		}
+
+		$extra_vars = $oDocumentModel->getExtraVars($obj->module_srl, $document_srl);
+
+		foreach ($extra_vars as $key => $extra_var)
+		{
+			if ($extra_var->eid == 'link_url')
+			{
+				$idx = strval($key);
+				break;
+			}
+
+		}
+
+		$url = $obj->{'extra_vars' . $idx};
+
+		$image_length = (int)preg_replace('/[^0-9]*/s', '', $config->image_length);
+		$image_length = is_numeric($image_length) ? $image_length : 0;
+
+		$parserData = getModel('parserlink')->defaultPreviewByUrl($url, $image_length, $obj->document_srl, 'extra');
+
+		$content = "
+		<div class=\"ap_parser\" style=\"text-align: center;\">
+	<div class=\"ap_parser_content\">
+		<div class=\"ap_parser_image_wrap\">
+			<a href=\"{$parserData['url']}\"><div class=\"ap_parser_images\"><img src=\"{$parserData['images'][0]['img']}\" /></div></a>
+		</div>
+		<div class=\"ap_parser_info\">
+			<div class=\"ap_parser_title\"><a href=\"{$parserData['url']}\">{$parserData['title']}</a></div>
+			<div class=\"ap_parser_desc\">{$parserData['description']}</div>
+		</div>
+	</div>
+</div>
+
+		";
+		$obj->content = $content;
+
+		/** @var documentController $oDocumentController */
+		$oDocumentController = getController('document');
+		$output = $oDocumentController->updateDocument($oDocument, $obj);
 	}
 }

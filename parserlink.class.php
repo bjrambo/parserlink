@@ -5,6 +5,7 @@ class parserlink extends ModuleObject
 
 	private static $triggers = array(
 		array('moduleHandler.init', 'parserlink', 'controller', 'triggerAfterModuleHandlerInit', 'after'),
+		array('document.insertDocument', 'parserlink', 'controller', 'triggerAfterInsertDocument', 'after'),
 	);
 
 	private static $delete_triggers = array(
