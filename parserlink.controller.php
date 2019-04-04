@@ -154,7 +154,6 @@ class parserlinkController extends parserlink
 	{
 		/** @var documentModel $oDocumentModel */
 		$oDocumentModel = getModel('document');
-		$oDocument = $oDocumentModel->getDocument($obj->document_srl);
 		$config = self::getConfig();
 		if ($config->use !== 'Y')
 		{
@@ -185,25 +184,18 @@ class parserlinkController extends parserlink
 		$image_length = is_numeric($image_length) ? $image_length : 0;
 
 		$parserData = getModel('parserlink')->defaultPreviewByUrl($url, $image_length, $obj->document_srl, 'extra');
-
-		$content = "
-		<div class=\"ap_parser\" style=\"text-align: center;\">
-	<div class=\"ap_parser_content\">
-		<div class=\"ap_parser_image_wrap\">
-			<a href=\"{$parserData['url']}\"><div class=\"ap_parser_images\"><img src=\"{$parserData['images'][0]['img']}\" /></div></a>
-		</div>
-		<div class=\"ap_parser_info\">
-			<div class=\"ap_parser_title\"><a href=\"{$parserData['url']}\">{$parserData['title']}</a></div>
-			<div class=\"ap_parser_desc\">{$parserData['description']}</div>
-		</div>
-	</div>
-</div>
-
-		";
-		$obj->content = $content;
-
-		/** @var documentController $oDocumentController */
-		$oDocumentController = getController('document');
-		$output = $oDocumentController->updateDocument($oDocument, $obj);
+		debugPrint($parserData);
+		
+		$args = new stdClass();
+		$args->module_srl = $obj->module_srl;
+		$args->document_srl = $obj->document_srl;
+		$args->site_url = $url;
+		$args->site_data = serialize($parserData);
+		$args->update_time = date('YmdHis');
+		$output = executeQuery('parserlink.insertParserlinkDocument', $args);
+		if(!$output->toBool())
+		{
+			return $output;
+		}
 	}
 }

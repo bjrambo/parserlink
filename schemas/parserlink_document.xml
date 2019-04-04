@@ -1,0 +1,7 @@
+<table name="parserlink_document">
+	<column name="module_srl" type="number" size="11" notnull="notnull" />
+	<column name="document_srl" type="number" size="11" notnull="notnull" />
+	<column name="site_url" type="varchar" size="255" index="idx_site_url" notnull="notnull" />
+	<column name="site_data" type="bigtext" notnull="notnull" />
+	<column name="update_time" type="bignumber" notnull="notnull" />
+</table>

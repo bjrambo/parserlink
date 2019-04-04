@@ -1,0 +1,12 @@
+<query id="insertParserlinkDocument" action="insert">
+	<tables>
+		<table name="parserlink_document" />
+	</tables>
+	<columns>
+		<column name="module_srl" var="module_srl" filter="number" notnull="notnull" />
+		<column name="document_srl" var="document_srl" notnull="notnull" />
+		<column name="site_url" var="site_url" notnull="notnull" />
+		<column name="site_data" var="site_data" notnull="notnull" />
+		<column name="update_time" var="update_time" notnull="notnull" />
+	</columns>
+</query>
