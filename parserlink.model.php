@@ -787,10 +787,11 @@ class parserlinkModel extends parserlink
 					return $insertOutput;
 				}
 			}
-			if ($type == 'extra')
+			if($type=='extra')
 			{
 				return $return_array;
 			}
+
 			// Clear cache from url.
 			if ($oCacheHandler)
 			{

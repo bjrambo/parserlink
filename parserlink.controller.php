@@ -184,8 +184,6 @@ class parserlinkController extends parserlink
 		$image_length = is_numeric($image_length) ? $image_length : 0;
 
 		$parserData = getModel('parserlink')->defaultPreviewByUrl($url, $image_length, $obj->document_srl, 'extra');
-		debugPrint($parserData);
-		
 		$args = new stdClass();
 		$args->module_srl = $obj->module_srl;
 		$args->document_srl = $obj->document_srl;
