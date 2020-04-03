@@ -186,7 +186,7 @@ class parserlinkController extends parserlink
 		$parserData = getModel('parserlink')->defaultPreviewByUrl($url, $image_length, $obj->document_srl, 'extra');
 		$path = $this->Thumbnail_String($parserData['images'][0]['base64'], 300, null, $obj);
 		
-		$path = '/files/parserimg/' . getNumberingPath($obj->document_srl) . $obj->document_srl . '.png';
+		$path = '/files/parserlink/' . getNumberingPath($obj->document_srl) . $obj->document_srl . '.png';
 
 		$parserData['images'][0]['base64'] = $path;
 		$parserData['images'][0]['img'] = $path;
@@ -230,7 +230,7 @@ class parserlinkController extends parserlink
 		$im_new = imagecreatetruecolor($user_width, $user_height);
 		imagecopyresized($im_new,$im,0,0,0,0,$user_width,$user_height,$orig_width,$orig_height);
 		
-		$dir = _XE_PATH_ . 'files/parserimg/' . getNumberingPath($obj->document_srl);
+		$dir = _XE_PATH_ . 'files/parserlink/' . getNumberingPath($obj->document_srl);
 		$fileName =  $obj->document_srl.'.png';
 		
 		if(!Filehandler::isDir($dir))

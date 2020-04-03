@@ -1,4 +1,5 @@
 <?php
+
 class parserlinkModel extends parserlink
 {
 	function init()
@@ -15,9 +16,9 @@ class parserlinkModel extends parserlink
 		$userName = Context::get('username');
 		$tag = Context::get('tag');
 
-		if(!$type)
+		if (!$type)
 		{
-			if($userName)
+			if ($userName)
 			{
 				$type = 'user';
 			}
@@ -27,7 +28,7 @@ class parserlinkModel extends parserlink
 			}
 		}
 
-		if($tag)
+		if ($tag)
 		{
 			$tag = urldecode($tag);
 			$tag = urlencode($tag);
@@ -37,7 +38,7 @@ class parserlinkModel extends parserlink
 		$oCacheHandler = $this->getCacheHandler();
 
 		$cache_time_sec = (int)$config->cache_time * 86400;
-		if(!$config->cache_time)
+		if (!$config->cache_time)
 		{
 			$cache_time_sec = 86400;
 		}
@@ -72,13 +73,13 @@ class parserlinkModel extends parserlink
 		}
 
 		$args = new stdClass();
-		if($config->use_db_data === 'yes')
+		if ($config->use_db_data === 'yes')
 		{
 			$args->sns_url = $url;
 			$output = executeQuery('parserlink.getSnsData', $args);
-			if($output->data)
+			if ($output->data)
 			{
-				if($output->data->update_time > $beforeDataUnixTime)
+				if ($output->data->update_time > $beforeDataUnixTime)
 				{
 					$instaData = $output->data;
 
@@ -87,7 +88,7 @@ class parserlinkModel extends parserlink
 					$this->add('data', $mediaData);
 					if ($oCacheHandler)
 					{
-						if($type == 'user')
+						if ($type == 'user')
 						{
 							$oCacheHandler->put($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"), $mediaData, $cache_time_sec);
 						}
@@ -105,13 +106,13 @@ class parserlinkModel extends parserlink
 
 		$data = json_decode($response);
 
-		if($config->use_db_data === 'yes')
+		if ($config->use_db_data === 'yes')
 		{
 			$args->sns_data = $response;
 			$args->update_time = time();
 			$args->sns_type = 'instagram';
 			/** @var $output 74 line */
-			if($output->data)
+			if ($output->data)
 			{
 				$output = executeQuery('parserlink.updateSnsData', $args);
 			}
@@ -119,7 +120,7 @@ class parserlinkModel extends parserlink
 			{
 				$output = executeQuery('parserlink.insertSnsData', $args);
 			}
-			if(!$output->toBool())
+			if (!$output->toBool())
 			{
 				return;
 			}
@@ -130,7 +131,7 @@ class parserlinkModel extends parserlink
 
 		if ($oCacheHandler)
 		{
-			if($type == 'user')
+			if ($type == 'user')
 			{
 				$oCacheHandler->delete($oCacheHandler->getGroupKey('parserlink', "url:$url:type:$type:username:$userName"));
 			}
@@ -260,9 +261,9 @@ class parserlinkModel extends parserlink
 			}
 
 			$tag = array(
-				'tag_name' => $match['tag'][0],
-				'offset' => $match[0][1],
-				'contents' => !empty($match['contents']) ? $match['contents'][0] : '',
+				'tag_name'   => $match['tag'][0],
+				'offset'     => $match[0][1],
+				'contents'   => !empty($match['contents']) ? $match['contents'][0] : '',
 				//empty for self-closing tags
 				'attributes' => $attributes,
 			);
@@ -317,17 +318,17 @@ class parserlinkModel extends parserlink
 			return;
 		}
 
-		if(!$url)
+		if (!$url)
 		{
 			$url = urldecode(Context::get('url'));
 		}
-		
-		if(!$img_len)
+
+		if (!$img_len)
 		{
 			$img_len = Context::get('img_len');
 		}
 
-		if(!$document_srl)
+		if (!$document_srl)
 		{
 			$document_srl = Context::get('parser_document_srl');
 		}
@@ -363,15 +364,24 @@ class parserlinkModel extends parserlink
 		}
 		if (strpos($url, '//movie.naver.com/movie/preview/preview.nhn?preview') !== false)
 		{
-			$url = str_replace(array('://', 'movie/preview/preview.nhn?preview_'), array('://m.', 'm/event/EventView.nhn?'), $url);
+			$url = str_replace(array('://', 'movie/preview/preview.nhn?preview_'), array(
+				'://m.',
+				'm/event/EventView.nhn?'
+			), $url);
 		}
 		if (strpos($url, '//movie.naver.com/movie/preview/apply_win.nhn?apply') !== false)
 		{
-			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array('://m.', 'm/event/WinnerView.nhn?'), $url);
+			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array(
+				'://m.',
+				'm/event/WinnerView.nhn?'
+			), $url);
 		}
 		if (strpos($url, '//movie.naver.com/movie/board/ticketshare/list.nhn') !== false)
 		{
-			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array('://m.', 'm/event/ticketshare/TicketShareList.nhn'), $url);
+			$url = str_replace(array('://', 'movie/preview/apply_win.nhn?apply_'), array(
+				'://m.',
+				'm/event/ticketshare/TicketShareList.nhn'
+			), $url);
 		}
 		if (strpos($url, '//media.daum.net') !== false)
 		{
@@ -407,7 +417,13 @@ class parserlinkModel extends parserlink
 				}
 				else if (strpos($_url[3], 'market_news_view.nhn') !== false)
 				{
-					$url = str_replace(array('world', 'market_news_view', '=main', 'office_id=', 'article_id='), array('news', 'read', '=mainnews', 'officeId=', 'articleId='), $url);
+					$url = str_replace(array(
+						'world',
+						'market_news_view',
+						'=main',
+						'office_id=',
+						'article_id='
+					), array('news', 'read', '=mainnews', 'officeId=', 'articleId='), $url);
 				}
 			}
 			else if ($_url[2] == 'marketindex')
@@ -421,7 +437,10 @@ class parserlinkModel extends parserlink
 			{
 				if (strpos($_url[3], 'pro_invest_') !== false)
 				{
-					$url = str_replace(array('pro_invest_main.nhn', 'pro_invest_read.nhn'), array('expert.nhn', 'expertColumnRead.nhn'), $url);
+					$url = str_replace(array('pro_invest_main.nhn', 'pro_invest_read.nhn'), array(
+						'expert.nhn',
+						'expertColumnRead.nhn'
+					), $url);
 				}
 				else
 				{
@@ -441,13 +460,18 @@ class parserlinkModel extends parserlink
 			{
 				if ($_url[3] && $_url[3] != '')
 				{
-					$url = str_replace(array('news_read', 'mode=', 'office_id=', 'article_id='), array('read', 'category=', 'officeId=', 'articleId='), $url);
+					$url = str_replace(array('news_read', 'mode=', 'office_id=', 'article_id='), array(
+						'read',
+						'category=',
+						'officeId=',
+						'articleId='
+					), $url);
 				}
 			}
 		}
 
 		$oCacheHandler = $this->getCacheHandler();
-		if($config->use_db_data === 'yes')
+		if ($config->use_db_data === 'yes')
 		{
 			if (preg_match('/youtube.com/u', $url))
 			{
@@ -628,13 +652,17 @@ class parserlinkModel extends parserlink
 
 		// Parse Open Graph or Twittercard Images First
 		$return_array['images'] = '';
+
 		foreach ($nodes as $node)
 		{
 			$img = trim($node['attributes']['content']);
 			$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
 			if (strtolower($node['attributes']['property']) == 'naverblog:profile_image')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
+				$images[] = array(
+					"img"    => $img,
+					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
+				);
 				if (count($images))
 				{
 					break;
@@ -642,7 +670,10 @@ class parserlinkModel extends parserlink
 			}
 			else if (strtolower($node['attributes']['property']) == 'og:image')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
+				$images[] = array(
+					"img"    => $img,
+					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
+				);
 				if (count($images))
 				{
 					break;
@@ -650,16 +681,21 @@ class parserlinkModel extends parserlink
 			}
 			else if (strtolower($node['attributes']['name']) == 'twitter:image:src')
 			{
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
+				$images[] = array(
+					"img"    => $img,
+					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
+				);
 				if (count($images))
 				{
 					break;
 				}
 			}
 		}
+
 		if (count($images))
 		{
 			$return_array['images'] = array_values($images);
+			debugPrint($return_array);
 		}
 		else
 		{
@@ -675,7 +711,6 @@ class parserlinkModel extends parserlink
 
 			// Parse Images
 			$images_array = $oParserlinkModel->extract_tags($string, 'img');
-
 			// Naver Cafe Images
 			if (strpos($url, 'cafe.naver.com') !== false)
 			{
@@ -703,7 +738,10 @@ class parserlinkModel extends parserlink
 					}
 				}
 				$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
-				$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
+				$images[] = array(
+					"img"    => $img,
+					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
+				);
 			}
 			// Other Images
 			else
@@ -720,7 +758,7 @@ class parserlinkModel extends parserlink
 					{
 						if (substr($img, 0, 7) == 'http://')
 						{
-							;
+							
 						}
 						else if (substr($img, 0, 1) == '/' || $base_override)
 						{
@@ -733,10 +771,28 @@ class parserlinkModel extends parserlink
 
 						if ($width == '' && $height == '')
 						{
-							$details = @getimagesize($img);
-							if (is_array($details))
+							$dir = _XE_PATH_ . 'files/parserlink/tmp/' . getNumberingPath($document_srl);
+							$file_name = $document_srl . '.jpg';
+							if (!FileHandler::isDir($dir))
 							{
-								list($width, $height, $type, $attr) = $details;
+								FileHandler::makeDir($dir);
+							}
+
+							$path = $dir . $file_name;
+							$result = FileHandler::getRemoteFile($img, $path);
+							if($result)
+							{
+								$details = @getimagesize($path);
+								if (is_array($details))
+								{
+									list($width, $height, $type, $attr) = $details;
+								}
+								else
+								{
+									FileHandler::removeFile($path);
+									continue;
+								}
+								FileHandler::removeFile($path);
 							}
 						}
 						$width = intval($width);
@@ -746,7 +802,10 @@ class parserlinkModel extends parserlink
 						{
 							if (($width > 0 && $height > 0 && (($width / $height) < 3) && (($width / $height) > .2)) && strpos($img, 'logo') === false)
 							{
-								$images[] = array("img" => $img, 'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img)));
+								$images[] = array(
+									"img"    => $img,
+									'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
+								);
 							}
 						}
 
@@ -760,8 +819,7 @@ class parserlinkModel extends parserlink
 			$return_array['images'] = array_values($images);
 		}
 		$return_array['total_images'] = count($return_array['images']);
-
-		if($config->use_db_data === 'yes')
+		if ($config->use_db_data === 'yes')
 		{
 			$args = new stdClass();
 			$args->site_url = $url;
@@ -787,7 +845,7 @@ class parserlinkModel extends parserlink
 					return $insertOutput;
 				}
 			}
-			if($type=='extra')
+			if ($type == 'extra')
 			{
 				return $return_array;
 			}
