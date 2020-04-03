@@ -184,6 +184,13 @@ class parserlinkController extends parserlink
 		$image_length = is_numeric($image_length) ? $image_length : 0;
 
 		$parserData = getModel('parserlink')->defaultPreviewByUrl($url, $image_length, $obj->document_srl, 'extra');
+		$path = $this->Thumbnail_String($parserData['images'][0]['base64'], 300, null, $obj);
+		
+		$path = '/files/parserimg/' . getNumberingPath($obj->document_srl) . $obj->document_srl . '.png';
+
+		$parserData['images'][0]['base64'] = $path;
+		$parserData['images'][0]['img'] = $path;
+
 		$args = new stdClass();
 		$args->module_srl = $obj->module_srl;
 		$args->document_srl = $obj->document_srl;
@@ -191,9 +198,54 @@ class parserlinkController extends parserlink
 		$args->site_data = serialize($parserData);
 		$args->update_time = date('YmdHis');
 		$output = executeQuery('parserlink.insertParserlinkDocument', $args);
-		if(!$output->toBool())
+		if (!$output->toBool())
 		{
 			return $output;
 		}
+	}
+
+	function Thumbnail_String($string, $user_width = 86, $user_height = null, $obj = null)
+	{
+		ob_start();
+		ob_flush();
+		flush();
+		$exploded = explode(',', $string, 2);
+		$encoded = $exploded[1];
+		$decoded = base64_decode($encoded);
+		$im = imagecreatefromstring($decoded);
+		$orig_width = imagesx($im);
+		$orig_height = imagesy($im);
+		if ($orig_width >= $user_width)
+		{
+			if (strlen($user_height) === 0)
+			{
+				$user_height = @round($orig_height * ($user_width / $orig_width));
+			}
+		}
+		else
+		{
+			$user_width = $orig_width;
+			$user_height = $orig_height;
+		}
+		$im_new = imagecreatetruecolor($user_width, $user_height);
+		imagecopyresized($im_new,$im,0,0,0,0,$user_width,$user_height,$orig_width,$orig_height);
+		
+		$dir = _XE_PATH_ . 'files/parserimg/' . getNumberingPath($obj->document_srl);
+		$fileName =  $obj->document_srl.'.png';
+		
+		if(!Filehandler::isDir($dir))
+		{
+			$output = Filehandler::makeDir($dir);
+		}
+		$path = $dir . $fileName;
+		
+		if($im_new != false)
+		{
+			imagejpeg($im_new, $path);
+		}
+		imagedestroy($im_new);
+		ob_end_clean();
+
+		return $path;
 	}
 }
