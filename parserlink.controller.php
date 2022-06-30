@@ -187,8 +187,7 @@ class parserlinkController extends parserlink
 		$path = $this->Thumbnail_String($parserData['images'][0]['base64'], 300, null, $obj);
 		
 		$path = '/files/parserlink/' . getNumberingPath($obj->document_srl) . $obj->document_srl . '.png';
-
-		$parserData['images'][0]['base64'] = $path;
+		
 		$parserData['images'][0]['img'] = $path;
 
 		$args = new stdClass();
@@ -213,38 +212,42 @@ class parserlinkController extends parserlink
 		$encoded = $exploded[1];
 		$decoded = base64_decode($encoded);
 		$im = imagecreatefromstring($decoded);
-		$orig_width = imagesx($im);
-		$orig_height = imagesy($im);
-		if ($orig_width >= $user_width)
+		
+		if($im)
 		{
-			if (strlen($user_height) === 0)
+			$orig_width = imagesx($im);
+			$orig_height = imagesy($im);
+			if ($orig_width >= $user_width)
 			{
-				$user_height = @round($orig_height * ($user_width / $orig_width));
+				if (strlen($user_height) === 0)
+				{
+					$user_height = @round($orig_height * ($user_width / $orig_width));
+				}
 			}
+			else
+			{
+				$user_width = $orig_width;
+				$user_height = $orig_height;
+			}
+			$im_new = imagecreatetruecolor($user_width, $user_height);
+			imagecopyresized($im_new,$im,0,0,0,0,$user_width,$user_height,$orig_width,$orig_height);
+
+			$dir = _XE_PATH_ . 'files/parserlink/' . getNumberingPath($obj->document_srl);
+			$fileName =  $obj->document_srl.'.png';
+
+			if(!Filehandler::isDir($dir))
+			{
+				$output = Filehandler::makeDir($dir);
+			}
+			$path = $dir . $fileName;
+
+			if($im_new != false)
+			{
+				imagejpeg($im_new, $path);
+			}
+			imagedestroy($im_new);
+			ob_end_clean();
 		}
-		else
-		{
-			$user_width = $orig_width;
-			$user_height = $orig_height;
-		}
-		$im_new = imagecreatetruecolor($user_width, $user_height);
-		imagecopyresized($im_new,$im,0,0,0,0,$user_width,$user_height,$orig_width,$orig_height);
-		
-		$dir = _XE_PATH_ . 'files/parserlink/' . getNumberingPath($obj->document_srl);
-		$fileName =  $obj->document_srl.'.png';
-		
-		if(!Filehandler::isDir($dir))
-		{
-			$output = Filehandler::makeDir($dir);
-		}
-		$path = $dir . $fileName;
-		
-		if($im_new != false)
-		{
-			imagejpeg($im_new, $path);
-		}
-		imagedestroy($im_new);
-		ob_end_clean();
 
 		return $path;
 	}

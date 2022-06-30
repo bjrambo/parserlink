@@ -151,7 +151,7 @@ class parserlinkModel extends parserlink
 	function checkValues($value)
 	{
 		$value = trim($value);
-		if (get_magic_quotes_gpc())
+		if((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase'))!="off")) )
 		{
 			$value = stripslashes($value);
 		}
@@ -661,7 +661,6 @@ class parserlinkModel extends parserlink
 			{
 				$images[] = array(
 					"img"    => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
 				);
 				if (count($images))
 				{
@@ -672,7 +671,6 @@ class parserlinkModel extends parserlink
 			{
 				$images[] = array(
 					"img"    => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
 				);
 				if (count($images))
 				{
@@ -683,7 +681,6 @@ class parserlinkModel extends parserlink
 			{
 				$images[] = array(
 					"img"    => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
 				);
 				if (count($images))
 				{
@@ -695,7 +692,6 @@ class parserlinkModel extends parserlink
 		if (count($images))
 		{
 			$return_array['images'] = array_values($images);
-			debugPrint($return_array);
 		}
 		else
 		{
@@ -740,7 +736,6 @@ class parserlinkModel extends parserlink
 				$ext = trim(pathinfo($img, PATHINFO_EXTENSION));
 				$images[] = array(
 					"img"    => $img,
-					'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
 				);
 			}
 			// Other Images
@@ -804,7 +799,6 @@ class parserlinkModel extends parserlink
 							{
 								$images[] = array(
 									"img"    => $img,
-									'base64' => 'data:image/' . $ext . ';base64,' . base64_encode($oParserlinkModel->getRemoteResourceImageString($img))
 								);
 							}
 						}
@@ -818,6 +812,13 @@ class parserlinkModel extends parserlink
 			}
 			$return_array['images'] = array_values($images);
 		}
+		$testVal = $return_array['images'];
+
+		$saveFile = $return_array['images'][0]['img'];
+
+		$imageSaveOutput = $this->getRemoteSaveImage($saveFile, $document_srl);
+
+		
 		$return_array['total_images'] = count($return_array['images']);
 		if ($config->use_db_data === 'yes')
 		{
@@ -858,6 +859,36 @@ class parserlinkModel extends parserlink
 		}
 
 		$this->add('return_array', $return_array);
+	}
+	
+	public function getRemoteSaveImage($remoteUri, $document_srl)
+	{
+		preg_match_all("/jpe?g|png|gif|bmp|mp4/i", $remoteUri, $imgMatches, PREG_SET_ORDER);
+		
+		$dirPath = RX_BASEDIR . 'files/cache/parserlink/img/'.getNumberingPath($document_srl);
+		$filePath = RX_BASEDIR . 'files/cache/parserlink/img/'.getNumberingPath($document_srl) . '/' . getNextSequence() . $imgMatches[0][0];
+
+		$image_file_url = Context::getRequestUri().'files/cache/parserlink/img/'.getNumberingPath($document_srl);
+		
+		if(FileHandler::exists($filePath))
+		{
+			return $image_file_url;
+		}
+		if(!FileHandler::isDir($dirPath))
+		{
+			FileHandler::makeDir($dirPath);
+		}
+
+		$fp = fopen($filePath, 'w');
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $remoteUri);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36");
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_exec($ch);
+		fclose($fp);
+		curl_close($ch);
 	}
 }
 /* End of file */

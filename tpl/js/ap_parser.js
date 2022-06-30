@@ -416,14 +416,14 @@
 						if (total_images == 1) {
 							$('#' + prefix + nav + i).remove();
 							var img_src = '';
-							img_src = (data.return_array.images[0].img.indexOf('http') != -1) ? data.return_array.images[0].base64 : '//' + domain + data.return_array.images[0].base64;
+							img_src = data.return_array.images[0].img;
 							$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_1">');
 						} else if (total_images > 1) {
 							$('#' + prefix + tot + i).html(total_images);
 							$('#' + prefix + imgs + i).html('');
 							$.each(data.return_array.images, function (a, b) {
 								var img_src = '';
-								img_src = (b.img.indexOf('http') != -1) ? b.base64 : '//' + domain + b.base64;
+								img_src = img_src = data.return_array.images[0].img;
 								$('#' + prefix + imgs + i).append('<img src="' + img_src + '" id="' + prefix + img_id + i + '_' + (a + 1) + '">');
 							});
 							$('#' + prefix + imgs + i + ' img').hide();
