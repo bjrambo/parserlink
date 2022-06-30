@@ -28,9 +28,9 @@
 		<div class="x_control-group">
 			<label class="x_control-label">오브젝트 캐시사용</label>
 			<div class="x_controls">
-				<select name="use_cache" disabled="disabled"|cond="!$object_cache_available || $config->use_db_data !== 'yes'">
-					<option value="yes" selected="selected"|cond="$config->use_cache=='yes' && $object_cache_available && $config->use_db_data === 'yes'">{$lang->use}</option>
-					<option value="no" selected="selected"|cond="$config->use_cache=='no' || !$object_cache_available || $config->use_db_data !== 'yes'">{$lang->notuse}</option>
+				<select name="use_cache" disabled="disabled"|cond="!$is_rhymix">
+					<option value="yes" selected="selected"|cond="$config->use_cache=='yes'">{$lang->use}</option>
+					<option value="no" selected="selected"|cond="$config->use_cache=='no'">{$lang->notuse}</option>
 				</select>
 				<p>
 					디비데이터에 저장된 정보들을 오브젝트 캐시로 바꿔 성능을 향상시킵니다.(디비 사용하지 않고 캐시를 이용)
@@ -38,10 +38,12 @@
 				<p>
 					<block cond="$config->use_db_data !== 'yes'"> <span class="x_label x_label-important">경고 !</span> <span>디비 데이터를 사용하지 않아 오브젝트 캐시를 활성화 할 수 없습니다.</span></block>
 				</p>
-				<div cond="!$object_cache_available">
-					<block cond="!$object_cache_available"><span class="x_label x_label-important">경고 !</span> 오브젝트캐시를 사용하지 않고 있습니다. 오브젝트 캐시를 사용하셔야 합니다.</block>
+				<p>
+					<block cond="!$is_rhymix"><span class="x_label x_label-denger">라이믹스 사용자만 옵션을 사용할 수 있습니다.</span> <span>디비 데이터를 사용하지 않아 오브젝트 캐시를 활성화 할 수 없습니다.</span></block>
+				</p>
+				<div cond="!isset($object_cache)">
+					<block cond="!isset($object_cache)"><span class="x_label x_label-important">경고 !</span> 오브젝트캐시를 사용하지 않고 있습니다. 오브젝트 캐시를 사용하셔야 합니다.</block>
 					<div>라이믹스 : 시스템설정 -> 고급설정 -> 캐시사용 설정</div>
-					<div>XE : files/config/db.config.php 파일 내에 $db_info->use_object_cache = 'file'; 과 같이 오브젝트 캐시 사용설정. 자세한사항은 XE메뉴얼 참고.</div>
 				</div>
 			</div>
 		</div>

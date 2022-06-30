@@ -115,25 +115,23 @@ class parserlink extends ModuleObject
 
 	protected function getCacheHandler()
 	{
-		static $oCacheHandler = null;
-		if($oCacheHandler === null)
+		$cache_type = config('cache.type') ?? '';
+		if ($cache_type && !preg_match('/^(?:file|dummy)\b/i', $cache_type))
 		{
-			if (self::getConfig()->use_cache !== 'yes')
+			$handler = CacheHandler::getInstance('object');
+			if ($handler->isSupport())
 			{
-				$oCacheHandler = false;
+				return $handler;
 			}
 			else
 			{
-				$oCacheHandler = CacheHandler::getInstance('object');
-
-				if (!$oCacheHandler->isSupport())
-				{
-					$oCacheHandler = false;
-				}
+				return false;
 			}
 		}
-
-		return $oCacheHandler;
+		else
+		{
+			return false;
+		}
 	}
 
 	/**

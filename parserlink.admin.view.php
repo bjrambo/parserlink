@@ -20,7 +20,8 @@ class parserlinkAdminView extends parserlink
 		Context::set('mid_list', $mid_list);
 		Context::set('skin_list', $skin_list);
 		Context::set('config', $config);
-		Context::set('object_cache_available', preg_match('/^(apc|file|memcache|redis|wincache|xcache|sqlite)/', Context::getDBInfo()->use_object_cache));
+		Context::set('object_cache', config('cache.type'));
+		Context::set('is_rhymix', defined('RX_BASEDIR'));
 	}
 
 	function dispParserlinkAdminDataList()

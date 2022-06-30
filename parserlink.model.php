@@ -812,13 +812,10 @@ class parserlinkModel extends parserlink
 			}
 			$return_array['images'] = array_values($images);
 		}
-		$testVal = $return_array['images'];
-
 		$saveFile = $return_array['images'][0]['img'];
 
 		$imageSaveOutput = $this->getRemoteSaveImage($saveFile, $document_srl);
 
-		
 		$return_array['total_images'] = count($return_array['images']);
 		if ($config->use_db_data === 'yes')
 		{
